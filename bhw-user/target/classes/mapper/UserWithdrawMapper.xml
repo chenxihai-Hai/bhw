@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.user.mapper.UserWIthdrawMapper">
+
+    <select id="qryUserWithdrawList" resultType="com.bhw.user.pojo.UserWithdraw">
+        SELECT t.*,tbu.`USERNAME`,tp.`BANKCARD`,tp.`BANKNAME` FROM T_WITHDRAW_USER t
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = t.`USERID`
+        LEFT JOIN T_PAYMENT_BANKCARD tp ON tp.`ID` = t.`BANKCARDID`
+        WHERE 1=1
+        <if test="null !=userWithdraw.userId">
+            AND t.`USERID` = #{userWithdraw.userId}
+        </if>
+        <if test="null !=userWithdraw.status">
+            AND t.`STATUS` = #{userWithdraw.status}
+        </if>
+        <if test="null != userWithdraw.startTime and null != userWithdraw.endTime">
+            and DATE_FORMAT( t.`CREATETIME`, '%Y-%m-%d' ) BETWEEN #{userWithdraw.startTime} AND #{userWithdraw.endTime}
+        </if>
+        ORDER BY t.`CREATETIME` DESC
+    </select>
+
+</mapper>

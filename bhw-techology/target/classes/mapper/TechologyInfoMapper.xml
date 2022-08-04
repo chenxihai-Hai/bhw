@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.bhwtechology.mapper.TechologyInfoMapper">
+    <resultMap id="SERVERLIST_MAP" type="com.bhw.bhwtechology.vo.ServerListPageVo">
+        <result column="SERVER_NAME" property="serverName" jdbcType="VARCHAR"/>
+        <result column="NAME" property="intellectualName" jdbcType="VARCHAR"/>
+        <result column="BUDGET" property="budget" jdbcType="VARCHAR"/>
+        <result column="SERVER_REMARK" property="serverRemark" jdbcType="VARCHAR"/>
+        <result column="NAME" property="businessName" jdbcType="VARCHAR"/>
+        <result column="PROVINCE_NAME" property="provinceName" jdbcType="VARCHAR"/>
+        <result column="CITY_NAME" property="cityName" jdbcType="VARCHAR"/>
+        <result column="CHECK_TYPE" property="checkType" jdbcType="INTEGER"/>
+        <result column="RESULT" property="result" jdbcType="INTEGER"/>
+        <result column="STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="InfoListMap" type="com.bhw.bhwtechology.vo.InfoListVo">
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="TECH_CODE" property="techCode" jdbcType="VARCHAR"/>
+        <result column="TECH_NAME" property="techName" jdbcType="VARCHAR"/>
+        <result column="CHECK_TYPE" property="checkType" jdbcType="INTEGER"/>
+        <result column="ON_PRICE_TYPE" property="onPriceType" jdbcType="INTEGER"/>
+        <result column="ORIGINAL_PRICE" property="originalPrice" jdbcType="VARCHAR"/>
+        <result column="PRICE" property="price" jdbcType="VARCHAR"/>
+        <result column="BUDGET" property="budget" jdbcType="VARCHAR"/>
+        <result column="NAME" property="businessName" jdbcType="VARCHAR"/>
+        <result column="HYNAME" property="intellectualName" jdbcType="VARCHAR"/>
+        <result column="CONTACT_NAME" property="contactName" jdbcType="VARCHAR"/>
+        <result column="CONTACT_UNIT" property="contactPhone" jdbcType="VARCHAR"/>
+        <result column="CONTACT_PHONE" property="contactUnit" jdbcType="VARCHAR"/>
+        <result column="CUTOFF_DATE" property="cutoffDate" jdbcType="VARCHAR"/>
+        <result column="KEY_WORD" property="keyWord" jdbcType="VARCHAR"/>
+        <result column="CITY_NAME" property="cityName" jdbcType="VARCHAR"/>
+        <result column="PROVINCE_NAME" property="provinceName" jdbcType="VARCHAR"/>
+        <result column="USERNAME" property="publisher" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.bhw.bhwtechology.pojo.TechologyInfo">
+        INSERT INTO T_TECHOLOGY_INFO
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null">
+                ID,
+            </if>
+            <if test="checkType !=null">
+                CHECK_TYPE,
+            </if>
+            <if test="techName !=null">
+                TECH_NAME,
+            </if>
+            <if test="techCode !=null">
+                TECH_CODE,
+            </if>
+            <if test="businessType !=null">
+                BUSINESS_TYPE,
+            </if>
+            <if test="onPriceType !=null">
+                ON_PRICE_TYPE,
+            </if>
+            <if test="originalPrice !=null">
+                ORIGINAL_PRICE,
+            </if>
+            <if test="price !=null">
+                PRICE,
+            </if>
+            <if test="budget !=null">
+                BUDGET,
+            </if>
+            <if test="address !=null">
+                ADDRESS,
+            </if>
+            <if test="cityId !=null">
+                CITY_ID,
+            </if>
+            <if test="freightType !=null">
+                FREIGHT_TYPE,
+            </if>
+            <if test="contactName !=null">
+                CONTACT_NAME,
+            </if>
+            <if test="contactUnit !=null">
+                CONTACT_UNIT,
+            </if>
+            <if test="contactPhone !=null">
+                CONTACT_PHONE,
+            </if>
+            <if test="keyWord !=null">
+                KEY_WORD,
+            </if>
+            <if test="intellectualType !=null">
+                INTELLECTUALTYPE,
+            </if>
+            <if test="serverName !=null">
+                SERVER_NAME,
+            </if>
+            <if test="serverRemark !=null">
+                SERVER_REMARK,
+            </if>
+            <if test="result !=null">
+                RESULT,
+            </if>
+            <if test="createTime !=null">
+                CREATE_TIME,
+            </if>
+            <if test="status !=null">
+                STATUS,
+            </if>
+            <if test="cutoffDate !=null">
+                CUTOFF_DATE,
+            </if>
+            <if test="source !=null">
+                SOURCE,
+            </if>
+            <if test="userId !=null">
+                USERID,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id !=null">
+                #{id},
+            </if>
+            <if test="checkType !=null">
+                #{checkType},
+            </if>
+            <if test="techName !=null">
+                #{techName},
+            </if>
+            <if test="techCode !=null">
+                #{techCode},
+            </if>
+            <if test="businessType !=null">
+                #{businessType},
+            </if>
+            <if test="onPriceType !=null">
+                #{onPriceType},
+            </if>
+            <if test="originalPrice !=null">
+                #{originalPrice},
+            </if>
+            <if test="price !=null">
+                #{price},
+            </if>
+            <if test="budget !=null">
+                #{budget},
+            </if>
+            <if test="address !=null">
+                #{address},
+            </if>
+            <if test="cityId !=null">
+                #{cityId},
+            </if>
+            <if test="freightType !=null">
+                #{freightType},
+            </if>
+            <if test="contactName !=null">
+                #{contactName},
+            </if>
+            <if test="contactUnit !=null">
+                #{contactUnit},
+            </if>
+            <if test="contactPhone !=null">
+                #{contactPhone},
+            </if>
+            <if test="keyWord !=null">
+                #{keyWord},
+            </if>
+            <if test="intellectualType !=null">
+                #{intellectualType},
+            </if>
+            <if test="serverName !=null">
+                #{serverName},
+            </if>
+            <if test="serverRemark !=null">
+                #{serverRemark},
+            </if>
+            <if test="result !=null">
+                #{result},
+            </if>
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+            <if test="status !=null">
+                #{status},
+            </if>
+            <if test="cutoffDate !=null">
+                #{cutoffDate},
+            </if>
+            <if test="source !=null">
+                #{source},
+            </if>
+            <if test="userId !=null">
+                #{userId},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectServerList" resultMap="SERVERLIST_MAP" parameterType="com.bhw.bhwtechology.dto.ServerListPageReq">
+        select f.ID,f.SERVER_NAME,f.SERVER_REMARK,f.BUDGET,f.CHECK_TYPE,sb.NAME,f.RESULT,f.STATUS,t.`NAME` ,p.PROVINCE_NAME, c.CITY_NAME
+        from T_TECHOLOGY_INFO f
+        LEFT JOIN T_INTELLECTUAL_PROJECT_TYPE t on f.INTELLECTUALTYPE=t.ID
+        LEFT JOIN T_SERVER_BUSINESS sb on sb.ID=f.BUSINESS_TYPE
+        LEFT JOIN T_BAIDU_CITY c on f.CITY_ID=c.CITY_ID
+        LEFT JOIN T_BAIDU_PROVINCE p on c.PROVINCE_ID=p.PROVINCE_ID
+        WHERE 1=1
+        <if test="null == req.status">
+            and f.STATUS=2
+        </if>
+        <if test="req.techCode !=null">
+            AND f.TECH_CODE  like  concat('%',#{req.techCode},'%')
+        </if>
+        <if test="req.techName !=null">
+            AND f.TECH_NAME like  concat('%',#{req.techName},'%')
+        </if>
+        <if test="req.checkType !=null">
+            AND f.CHECK_TYPE=#{req.checkType}
+        </if>
+        <if test="req.businessType !=null">
+            AND f.BUSINESS_TYPE=#{req.businessType}
+        </if>
+        <if test="req.startTime !=null and req.startTime !='' and req.endTime !=null and req.endTime !=''">
+            AND f.CREATE_TIME BETWEEN #{req.startTime} AND #{req.endTime}
+        </if>
+        ORDER  BY f.CREATE_TIME DESC
+    </select>
+    <update id="updateByIdList" parameterType="java.util.ArrayList">
+        UPDATE T_TECHOLOGY_INFO SET
+        STATUS=3
+        WHERE ID in (
+        <foreach collection="list" index="index" separator="," item="item">
+            #{item}
+        </foreach>
+        )
+    </update>
+    <select id="selectInfoList" parameterType="com.bhw.bhwtechology.dto.InfoListReq" resultMap="InfoListMap">
+        select t.ID,t.TECH_CODE,t.TECH_NAME,t.CHECK_TYPE,t.ON_PRICE_TYPE,t.STATUS,t.AUDIT_STATUS as auditStatus,t.USERID,
+        t.ORIGINAL_PRICE,t.PRICE,t.BUDGET,b.NAME,r.NAME as HYNAME,t.CONTACT_NAME,
+        t.CONTACT_UNIT,t.CONTACT_PHONE,t.CUTOFF_DATE,t.KEY_WORD,c.CITY_NAME,p.PROVINCE_NAME,u.USERNAME
+        from T_TECHOLOGY_INFO t
+        left join T_SERVER_BUSINESS b on t.BUSINESS_TYPE=b.ID
+        left join T_SCIENCE_REQUIRE_TYPE r on t.INTELLECTUALTYPE=r.ID
+        left join T_BAIDU_CITY c on t.CITY_ID=c.CITY_ID
+        left join T_BAIDU_PROVINCE p on c.PROVINCE_ID=p.PROVINCE_ID
+        left join T_BHW_USER u on u.ID=t.USERID
+        where 1=1
+        <if test="req.techName !=null">
+            and t.TECH_NAME=#{req.techName}
+        </if>
+        <if test="req.checkType !=null">
+          and t.CHECK_TYPE=#{req.checkType}
+        </if>
+        <if test="req.businessType !=null">
+            and t.BUSINESS_TYPE=#{req.businessType}
+        </if>
+        <if test="req.intellectualType !=null">
+            and t.INTELLECTUALTYPE=#{req.intellectualType}
+        </if>
+        <if test="req.intellectualType !=null">
+            and t.INTELLECTUALTYPE=#{req.intellectualType}
+        </if>
+        <if test="req.auditStatus !=null">
+            and t.AUDIT_STATUS=#{req.auditStatus}
+        </if>
+
+        order by t.CUTOFF_DATE desc
+    </select>
+    <update id="updateAuditStstus">
+        UPDATE T_TECHOLOGY_INFO SET
+        AUDIT_STATUS=#{auditStatus}
+        WHERE ID in (
+        <foreach collection="idList" index="index" separator="," item="item">
+            #{item}
+        </foreach>
+        )
+    </update>
+</mapper>

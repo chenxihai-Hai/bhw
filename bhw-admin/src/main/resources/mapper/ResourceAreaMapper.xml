@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.admin.mapper.ResourceAreaMapper">
+
+     <select id="selectCountByType" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+         SELECT  count(*) from T_RESOURCE_AREA WHERE  TYPE =#{type}
+     </select>
+    <select id="selectProvinceRank" resultType="com.bhw.admin.vo.AreaTopFive">
+        SELECT p.PROVINCE_ID,p.PROVINCE_NAME ,COUNT(*) as count
+        from T_RESOURCE_AREA r
+        LEFT JOIN T_BAIDU_PROVINCE p
+        on p.PROVINCE_ID in(SELECT PROVINCE_ID from T_BAIDU_CITY WHERE CITY_ID=r.CITY_ID)
+        WHERE r.TYPE=#{type} GROUP BY p.PROVINCE_ID ORDER BY COUNT(*) DESC LIMIT 5
+    </select>
+
+    <select id="selectResourceAreaRange" resultType="com.bhw.admin.pojo.ResourceAreaBean">
+        select * from T_RESOURCE_AREA WHERE 1=1
+        <if test="null != req.type">
+            and TYPE=#{req.type}
+        </if>
+        <if test="req.provinceId !=null">
+            AND CITY_ID in (SELECT CITY_ID FROM T_BAIDU_CITY WHERE PROVINCE_ID=#{req.provinceId})
+        </if>
+        <if test="req.startCapital !=null  and  req.endCapital !=null " >
+            AND REGISTERED_CAPITAL BETWEEN #{req.startCapital} AND #{req.endCapital}
+        </if>
+        <if test="null != req.fullName">
+            and t.FULL_NAME like concat('%',#{req.fullName},'%')
+        </if>
+        <if test="null != req.legalPerson">
+            and t.LEGAL_PERSON like concat('%',#{req.legalPerson},'%')
+        </if>
+        <if test="req.startDate !=null  and req.endDate !=null ">
+            AND CREATE_TIME BETWEEN #{req.startDate} AND #{req.endDate}
+        </if>
+        order by CREATEDATE desc
+    </select>
+
+    <insert id="insertList" parameterType="java.util.ArrayList">
+        INSERT INTO T_RESOURCE_AREA(FULL_NAME,SHORT_NAME,LEGAL_PERSON,REGISTERED_CAPITAL,CREATE_TIME,ADDRESS,INDUSTEY,TYPE,IMG,CITY_ID,PROFILE)VALUES
+       <foreach collection="list" index="index" separator="," item="item">
+           (#{item.fullName},#{item.shortName},#{item.legalPerson},#{item.registerdeCapital},#{item.createTime},#{item.address},#{item.industey},#{item.type},#{item.img},#{item.cityId},#{item.profile})
+       </foreach>
+    </insert>
+</mapper>

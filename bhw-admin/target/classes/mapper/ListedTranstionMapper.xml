@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.admin.mapper.ListedTranstionMapper">
+    <resultMap id="BaseResultMap" type="com.bhw.admin.vo.ListedMessageVo">
+        <result column="INFO_ID" property="infoId" jdbcType="INTEGER"/>
+        <result column="LISTED_NUMBER" property="number" jdbcType="VARCHAR"/>
+        <result column="LISTED_NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="CLIENT" property="client" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="TIMELEFT" property="timeLeft" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ListedResultMap" type="com.bhw.admin.vo.ListedResultVo">
+        <result column="INFO_ID" property="infoId" jdbcType="INTEGER"/>
+        <result column="LISTED_NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="CLIENT" property="client" jdbcType="VARCHAR"/>
+        <result column="DELISTER" property="delister" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="selectListedOnNumber" resultType="java.lang.Integer">
+        select COUNT(*) from T_LISTED_TRANSTION WHERE `STATUS`=#{status}
+    </select>
+    <select id="selectListedMessageVo" resultMap="BaseResultMap" >
+         select tlt.LISTED_NUMBER,LISTED_NAME,CLIENT,STATUS ,DATEDIFF(END_TIME,NOW())  as TIMELEFT,tln.`INFO_ID`
+         FROM T_LISTED_TRANSTION tlt
+          LEFT JOIN `T_LISTED_NOTICEINFO` tln ON tln.`LISTED_NUMBER` = tlt.`LISTED_NUMBER`
+         ORDER BY START_TIME DESC
+    </select>
+
+    <select id="selectListedResult" resultMap="ListedResultMap" parameterType="com.bhw.admin.dto.ListedResultReq">
+
+        SELECT tlt.LISTED_NAME,tlt.CLIENT,tlt.DELISTER,tlt.STATUS,tln.`INFO_ID`
+        FROM T_LISTED_TRANSTION tlt
+        LEFT JOIN `T_LISTED_NOTICEINFO` tln ON tln.`LISTED_NUMBER` = tlt.`LISTED_NUMBER` WHERE 1=1
+        <if test="req.status !=null">
+          AND  STATUS=#{req.status,jdbcType=INTEGER}
+        </if>
+        <if test="req.closeStatus !=null">
+            AND  CLOSESTATUS=#{req.closeStatus,jdbcType=INTEGER}
+        </if>
+        ORDER BY START_TIME DESC
+    </select>
+
+    <select id="backQryListedList" resultType="com.bhw.admin.vo.ListedTranstionVo" >
+        SELECT tl.`ID`,tl.`CLIENT`,tl.`CLOSESTATUS`,tl.`DELISTER`,tl.`END_TIME` AS endTime,tl.`START_TIME` AS startTime,
+        tl.`LISTED_NAME` AS listedName,tl.`LISTED_NUMBER` AS listedNumber,tlo.`CONTACT`,tlo.`CONTENT`,tlo.`INFO_TITLE` AS infoTitle,
+        tlo.`REMARK`,tlo.`TPT_POSTION` AS tptPostion,tlo.`TPT_TIME` AS tptTime,tlo.`TRANSACTION_TIME` AS transactionTime,tlo.`DELISTER` AS notDelister
+        FROM T_LISTED_TRANSTION tl
+        LEFT JOIN T_LISTED_NOTICEINFO tlo ON tlo.`LISTED_NUMBER` = tl.`LISTED_NUMBER`
+        WHERE 1=1
+        <if test="req.listedNumber !=null">
+            AND  tl.`LISTED_NUMBER` like  concat('%',#{req.listedNumber},'%')
+        </if>
+        <if test="req.client !=null">
+            AND  tl.`CLIENT` like  concat('%',#{req.client},'%')
+        </if>
+        <if test="req.notDelister !=null">
+            AND  tlo.`DELISTER` like  concat('%',#{req.notDelister},'%')
+        </if>
+        ORDER BY tl.`START_TIME` DESC
+    </select>
+
+</mapper>

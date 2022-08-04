@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.serverManage.mapper.ServiceDwMapper">
+
+    <select id="selectServiceDwList" resultType="com.bhw.serverManage.vo.AiListVo">
+        SELECT af.* FROM (
+            SELECT t.`ID`,t.`PROJECTNAME` AS title,t.`NEEDTYPE` AS needType,1 AS dataType FROM
+            T_INTELLECTUAL_PROJECT t WHERE 1=1
+            <if test="null != ai.auditStatus">
+                and t.`AUDITSTATUS`=#{ai.auditStatus}
+            </if>
+            <if test="null != ai.needType">
+                and t.`NEEDTYPE`=#{ai.needType}
+            </if>
+            <if test="null != ai.title">
+                AND t.`PROJECTTAG` like  concat('%',#{ai.title},'%')
+            </if>
+            <if test="null != ai.time">
+                AND t.`CREATETIME` <![CDATA[ >= ]]> #{ai.time}
+            </if>
+            UNION ALL
+            SELECT t.`ID`,t.`SERVER_NAME` AS title,t.`CHECK_TYPE` AS needType,14 AS dataType
+            FROM T_FISCALTAX_INFO t WHERE 1=1
+            <if test="null != ai.auditStatus">
+                and t.`AUDIT_STATUS` =#{ai.auditStatus}
+            </if>
+            <if test="null != ai.needType">
+                and t.`CHECK_TYPE`=#{ai.needType}
+            </if>
+            <if test="null != ai.title">
+                AND t.`KEY_WORD` like  concat('%',#{ai.title},'%')
+            </if>
+            <if test="null != ai.time">
+                AND t.`CREATE_TIME` <![CDATA[ >= ]]> #{ai.time}
+            </if>
+            UNION ALL
+            SELECT t.`ID`,t.`SERVER_NAME` AS title,t.`CHECK_TYPE` AS needType,11 AS dataType
+            FROM T_LEGALSERVER_INFO t WHERE 1=1
+            <if test="null != ai.auditStatus">
+                and t.`AUDIT_STATUS` =#{ai.auditStatus}
+            </if>
+            <if test="null != ai.title">
+                AND t.`KEY_WORD` like  concat('%',#{ai.title},'%')
+            </if>
+            <if test="null != ai.needType">
+                and t.`CHECK_TYPE`=#{ai.needType}
+            </if>
+            <if test="null != ai.time">
+                AND t.`CREATE_TIME` <![CDATA[ >= ]]> #{ai.time}
+            </if>
+            UNION ALL
+            SELECT t.`ID`,t.`SERVER_NAME` AS title,t.`CHECK_TYPE` AS needType,16 AS dataType
+            FROM T_TECHOLOGY_INFO t WHERE  1=1
+            <if test="null != ai.auditStatus">
+                and t.`AUDIT_STATUS` =#{ai.auditStatus}
+            </if>
+            <if test="null != ai.title">
+                AND t.`KEY_WORD` like  concat('%',#{ai.title},'%')
+            </if>
+            <if test="null != ai.needType">
+                and t.`CHECK_TYPE`=#{ai.needType}
+            </if>
+            <if test="null != ai.time">
+                AND t.`CREATE_TIME` <![CDATA[ >= ]]> #{ai.time}
+            </if>
+            UNION ALL
+            SELECT t.`ID`,t.`SERVER_NAME` AS title,t.`CHECK_TYPE` AS needType,t.`BUSINESS_TYPE`+7 AS dataType
+            FROM T_TECHSUPPLY_INFO t WHERE  1=1
+            <if test="null != ai.auditStatus">
+                and t.`AUDIT_STATUS` =#{ai.auditStatus}
+            </if>
+            <if test="null != ai.title">
+                AND t.`KEY_WORD` like  concat('%',#{ai.title},'%')
+            </if>
+            <if test="null != ai.needType">
+                and t.`CHECK_TYPE`=#{ai.needType}
+            </if>
+            <if test="null != ai.time">
+                AND t.`CREATE_TIME` <![CDATA[ >= ]]> #{ai.time}
+            </if>
+          ) af
+    </select>
+
+    <select id="qryTechAchievemnetList" resultType="com.bhw.serverManage.vo.TechAchievementVo" >
+        SELECT af.* FROM (
+        SELECT tot.`NAME` AS techName,tot.`TYPE` AS techType,tsr.`NAME` AS typeName,
+        tot.`CONTENT` AS introduce,tot.`SCHOOL` AS source,tot.`CREATETIME` AS  createTime,'' AS contactName,'' AS contactPhone
+        FROM T_OUTCOME tot
+        LEFT JOIN T_SCIENCE_REQUIRE_TYPE tsr ON tsr.`ID` = tot.`TYPE`
+        UNION ALL
+        SELECT tli.`SERVER_NAME` AS techName,tli.`BUSINESS_TYPE` AS techType,tsr.`NAME` AS typeName,
+        tli.`SERVER_REMARK` AS introduce,tli.`SOURCE`,tli.`CREATE_TIME` AS createTime,tli.`CONTACT_NAME` AS contactName,tli.`CONTACT_PHONE` AS contactPhone
+        FROM T_TECHOLOGY_INFO tli
+        LEFT JOIN T_SCIENCE_REQUIRE_TYPE tsr ON tsr.`ID` = tli.`BUSINESS_TYPE`
+        )  af
+        WHERE 1=1
+        <if test="null != tech.techType">
+            and af.techType = #{tech.techType}
+        </if>
+        <if test="null != tech.techName">
+            AND af.techName like  concat('%',#{tech.techName},'%')
+        </if>
+        ORDER BY af.createTime DESC
+    </select>
+</mapper>

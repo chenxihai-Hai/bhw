@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.user.mapper.PayMentAccoutMapper">
+    <update id="updateStatus">
+        update T_PAYMENT_ACCOUT
+        set STATUS=#{status}
+        where USERID=#{userid}
+    </update>
+   <update id="updateAccountPassword" parameterType="com.bhw.user.vo.PayAccountPwdVo">
+        update T_PAYMENT_ACCOUT
+        set PAYPASSWORD=#{newPassword}
+        where USERID=#{userId} and PHONE=#{phone}
+   </update>
+    <select id="selectAccountPresence" parameterType="com.bhw.user.vo.PayAccountVerifyVo" resultType="java.lang.Integer">
+        select count(*) from T_PAYMENT_ACCOUT a LEFT JOIN T_PAYMENT_BANKCARD b on a.ID=b.PAYACCOUNTID
+        where a.USERID=#{userId}
+        <if test="phone!=null">
+            and a.PHONE=#{phone}
+        </if>
+        <if test="oldPassword!=null">
+            and a.PAYPASSWORD=#{oldPassword}
+        </if>
+        <if test="idCard !=null">
+            and (a.IDCADR=#{idCard} or b.IDCARD=#{idCard})
+        </if>
+        <if test="bankCard!=null">
+            and b.BANKCARD=#{bankCard}
+        </if>
+    </select>
+    <select id="selecttAccountStatusByUserId" resultType="java.lang.Integer">
+        select STATUS from T_PAYMENT_ACCOUT where USERID=#{userid}
+    </select>
+    <update id="updatePwdByUserId" parameterType="Map">
+         update  T_PAYMENT_ACCOUT
+         set PAYPASSWORD=#{map.pwd},
+         STATUS=1
+         where USERID=#{map.userid}
+    </update>
+
+    <update id="updateAccountPhone" parameterType="Map">
+         update  T_PAYMENT_ACCOUT
+         set PHONE=#{map.phone}
+         where USERID=#{map.userid}
+    </update>
+    <select id="selectByPhoneAndUserid" parameterType="Map" resultType="java.lang.Integer">
+         select count(*) from T_PAYMENT_ACCOUT where  USERID=#{map.userid} and PHONE=#{map.phone}
+    </select>
+    <insert id="insertNewBankCard" parameterType="com.bhw.user.vo.PayBankCardVo">
+          insert into T_PAYMENT_BANKCARD(ID,PAYACCOUNTID,BANKCARDTYPE,BANKNAME,BANKCARD,IDCARD,CREATETIME)
+          VALUES
+          (null,(SELECT ID from T_PAYMENT_ACCOUT WHERE IDCADR=#{idCard}),#{bankCardType},#{bankName},#{bankCard},#{idCard},NOW())
+    </insert>
+</mapper>

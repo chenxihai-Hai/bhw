@@ -1,0 +1,45 @@
+server:
+  port: 8763
+spring:
+  application:
+    name: bhw-config
+  cloud:
+    config:
+      server:
+        git:
+#          uri: https://github.com/dengqunwe/test-git #测试环境
+          uri: https://github.com/dengqunwe/bhw #正式环境
+          #uri: https://gitee.com/ylimhhmily/OpenSource_CustomCircleLineProgressBar
+          search-paths: '{application}'
+          username: dengqunwe
+          password: dengqunwen923
+          default-label: master
+    bus:
+      trace:
+        enabled: true
+      enabled: true
+  rabbitmq:
+    host: yhtg.huayunstar.com
+    #host: localhost
+    port: 5672
+    virtual-host: /
+    username: admin
+    password: dqw123
+
+
+eureka:
+  client:
+    serviceUrl:
+#      defaultZone: http://yhtg.huayunstar.com:8661/eureka/
+      defaultZone: http://localhost:8761/eureka/
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+
+

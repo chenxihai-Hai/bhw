@@ -1,0 +1,35 @@
+= 北海湾技术平台接口文档
+
+
+[[_overview]]
+== Overview
+北海湾技术平台
+
+
+=== Version information
+[%hardbreaks]
+__Version__ : 1.0
+
+
+=== Contact information
+[%hardbreaks]
+__Contact__ : 邓群文
+
+
+=== License information
+[%hardbreaks]
+__Terms of service__ : http://yhtg.huayunstar.com:9999/bhw-service/index.html
+
+
+=== URI scheme
+[%hardbreaks]
+__Host__ : localhost:8762
+__BasePath__ : /
+
+
+=== Tags
+
+* thirdPartyApi : 第三方公共接口操作API
+
+
+

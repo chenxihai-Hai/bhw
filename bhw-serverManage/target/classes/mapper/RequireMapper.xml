@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.serverManage.mapper.RequireMapper">
+
+    <select id="selectRequireList" resultType="com.bhw.serverManage.vo.RequireVo">
+        SELECT af.* FROM (
+        SELECT ti.`ID` AS requireId,ti.`PROJECTNAME` AS requireName,tpt.`NAME` AS
+        industryName,ti.`UNITPRICE`,ti.`INTRODUCE`,
+        ti.`STATUS`,tc.`CITY_NAME` AS cityName,tp.`PROVINCE_NAME` AS provinceName,ti.`CITYID` as CITY_ID,
+        ti.`USERID` AS userId,tbu.`USERNAME` AS requireUserName,trt.`NAME` AS requireType,tbu.`PHOTO` AS
+        requireUserPhoto,tbu.`TYPE` as userType,
+        ti.`CREATETIME`,ti.`PROJECTTYPE` as projectType,ti.`INDUSTRYID` as industryId ,ti.`PROJECTTAG` AS tag,ti.source
+        FROM `T_INTELLECTUAL_PROJECT` ti
+        LEFT JOIN `T_BHW_USER` tbu ON tbu.`ID` = ti.`USERID`
+        LEFT JOIN `T_REQUIRE_TYPE` trt ON trt.`ID` = ti.`PROJECTTYPE`
+        LEFT JOIN `T_BAIDU_CITY` tc ON tc.`CITY_ID` = ti.`CITYID`
+        LEFT JOIN `T_BAIDU_PROVINCE` tp ON tp.`PROVINCE_ID` = tc.`PROVINCE_ID`
+        LEFT JOIN `T_INTELLECTUAL_PROJECT_TYPE` tpt ON tpt.`ID` = ti.`INDUSTRYID`
+        WHERE ti.`NEEDTYPE`=2
+        <if test="null != require.submitSt">
+            and ti.`STATUS`= #{require.submitSt}
+        </if>
+        UNION ALL
+        SELECT tes.`ID` AS requireId,tes.`SERVER_NAME` AS requireName ,tsb.`NAME` AS industryName,tes.`PRICE` AS unitPrice,
+        tes.`SERVER_REMARK` AS introduce,tes.`RESULT` AS STATUS,tc.`CITY_NAME` AS cityName,tp.`PROVINCE_NAME` AS
+        provinceName,tes.`CITY_ID`,
+        tes.`USERID`,tbu.`USERNAME` AS requireUserName,trt.`NAME` AS requireType,
+        tbu.`PHOTO` AS requireUserPhoto,tbu.`TYPE` as userType,tes.`CREATE_TIME` AS createTime,tes.`BUSINESS_TYPE`+7 AS projectType,
+        tes.`BUSINESS_TYPE` AS industryId,tes.KEY_WORD AS tag,tes.source
+        FROM T_TECHSUPPLY_INFO tes
+        LEFT JOIN T_SERVER_BUSINESS tsb ON tsb.`ID` = tes.`BUSINESS_TYPE`
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = tes.`USERID`
+        LEFT JOIN `T_REQUIRE_TYPE` trt ON trt.`ID` = (tes.`BUSINESS_TYPE`+7)
+        LEFT JOIN `T_BAIDU_CITY` tc ON tc.`CITY_ID` = tes.`CITY_ID`
+        LEFT JOIN `T_BAIDU_PROVINCE` tp ON tp.`PROVINCE_ID` = tc.`PROVINCE_ID`
+        WHERE tes.`CHECK_TYPE`=2
+        <if test="null != require.submitSt">
+            and tes.`STATUS`= #{require.submitSt}
+        </if>
+        UNION ALL
+        SELECT tls.`ID` AS requireId,tls.`SERVER_NAME` AS requireName ,tsb.`NAME` AS industryName,tls.`PRICE` AS unitPrice,
+        tls.`SERVER_REMARK` AS introduce,tls.`RESULT` AS STATUS,tc.`CITY_NAME` AS cityName,tp.`PROVINCE_NAME` AS
+        provinceName,tls.`CITY_ID`,
+        tls.`USERID`,tbu.`USERNAME` AS requireUserName,trt.`NAME` AS requireType,
+        tbu.`PHOTO` AS requireUserPhoto,tbu.`TYPE` as userType,tls.`CREATE_TIME` AS createTime,11 AS projectType,
+        tls.`BUSINESS_TYPE` AS industryId,tls.KEY_WORD AS tag,tls.source
+        FROM T_LEGALSERVER_INFO tls
+        LEFT JOIN T_SERVER_BUSINESS tsb ON tsb.`ID` = tls.`BUSINESS_TYPE`
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = tls.`USERID`
+        LEFT JOIN `T_REQUIRE_TYPE` trt ON trt.`ID` = 11
+        LEFT JOIN `T_BAIDU_CITY` tc ON tc.`CITY_ID` = tls.`CITY_ID`
+        LEFT JOIN `T_BAIDU_PROVINCE` tp ON tp.`PROVINCE_ID` = tc.`PROVINCE_ID`
+        WHERE tls.`CHECK_TYPE`=2
+        <if test="null != require.submitSt">
+            and tls.`STATUS`= #{require.submitSt}
+        </if>
+        UNION ALL
+        SELECT tft.`ID` AS requireId,tft.`SERVER_NAME` AS requireName ,tsb.`NAME` AS industryName,tft.`PRICE` AS unitPrice,
+        tft.`SERVER_REMARK` AS introduce,tft.`RESULT` AS STATUS,tc.`CITY_NAME` AS cityName,tp.`PROVINCE_NAME` AS
+        provinceName,tft.`CITY_ID`,
+        tft.`USERID`,tbu.`USERNAME` AS requireUserName,trt.`NAME` AS requireType,
+        tbu.`PHOTO` AS requireUserPhoto,tbu.`TYPE` as userType,tft.`CREATE_TIME` AS createTime,14 AS projectType,
+        tft.`BUSINESS_TYPE` AS industryId,tft.KEY_WORD AS tag,tft.source
+        FROM T_FISCALTAX_INFO tft
+        LEFT JOIN T_SERVER_BUSINESS tsb ON tsb.`ID` = tft.`BUSINESS_TYPE`
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = tft.`USERID`
+        LEFT JOIN `T_REQUIRE_TYPE` trt ON trt.`ID` = 14
+        LEFT JOIN `T_BAIDU_CITY` tc ON tc.`CITY_ID` = tft.`CITY_ID`
+        LEFT JOIN `T_BAIDU_PROVINCE` tp ON tp.`PROVINCE_ID` = tc.`PROVINCE_ID`
+        WHERE tft.`CHECK_TYPE`=2
+        <if test="null != require.submitSt">
+            and tft.`STATUS`= #{require.submitSt}
+        </if>
+        UNION ALL
+        SELECT t.`ID` AS requireId,t.`REQUIRENAME`,tcrt.`NAME` AS industryName,'' AS unitPrice,t.`INTRODUCE`,t.`STATUS`,
+        t.`CITYNAME`, t.`PROVINCENAME`,0 AS CITY_ID,1 AS userId,t.`UNITNAME` AS requireUserName,trp.`NAME` AS requireType ,
+        tbu.`PHOTO` AS requireUserPhoto,tbu.`TYPE` AS userType ,t.`CREATETIME` AS createTime,trp.id AS projectType,
+        tcrt.`ID` AS industryId,trp.NAME AS tag,
+        t.source FROM `T_BASICS_REQUIRE` t
+        LEFT JOIN `T_REQUIRE_TYPE` trp ON (trp.`ID`=t.`REQUIRETYPE` OR trp.`NAME` = t.`REQUIRETYPE`)
+        LEFT JOIN `T_SERVER_BUSINESS` tcrt ON (tcrt.`ID` = t.`INDUSTRYNAME` OR tcrt.`NAME` = t.`INDUSTRYNAME`)
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = 1
+        WHERE 1=1 and trp.REQUIRETYPE = 2
+        ) af where 1=1
+            <if test="null != require.requireId">
+                and af.requireId = #{require.requireId}
+            </if>
+            <if test="null != require.requireType">
+                and af.projectType = #{require.requireType}
+            </if>
+            <if test="null != require.industryId">
+                and af.industryId = #{require.industryId}
+            </if>
+            <if test="null != require.requireName">
+                and af.tag like  concat('%',#{require.requireName},'%')
+            </if>
+            <if test="null != require.cityName">
+                and af.CITY_ID = #{require.cityName}
+            </if>
+            <if test="null != require.status">
+                and af.`STATUS` = #{require.status}
+            </if>
+          ORDER BY af.CREATETIME DESC
+    </select>
+    <select id="selectScienceRequireList" resultType="com.bhw.serverManage.vo.RequireVo">
+        select * from (
+        SELECT t.`ID` AS requireId,t.`REQUIRENAME`,'' AS unitPrice,t.`INTRODUCE`,t.`STATUS`,t.`CITYNAME`,
+        t.`PROVINCENAME`,tcrt.`NAME` AS industryName,t.`UNITNAME` AS requireUserName,trp.`NAME` AS requireType ,
+        1 AS userId ,tbu.`PHOTO` AS requireUserPhoto,t.`CREATETIME` AS createTime,t.source,101 AS projectType,tbu.`TYPE` as userType
+        FROM `T_BASICS_REQUIRE` t
+        LEFT JOIN `T_REQUIRE_TYPE` trp ON (trp.`ID`=t.`REQUIRETYPE` OR trp.`NAME` = t.`REQUIRETYPE`)
+        LEFT JOIN `T_SCIENCE_REQUIRE_TYPE` tcrt ON (tcrt.`ID` = t.`INDUSTRYNAME` OR tcrt.`NAME` = t.`INDUSTRYNAME`)
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = 1
+        WHERE 1=1 and trp.REQUIRETYPE = 1
+        <if test="null != require.requireId">
+            and t.`ID` = #{require.requireId}
+        </if>
+        <if test="null != require.requireType">
+            and trp.`ID` = #{require.requireType}
+        </if>
+        <if test="null != require.industryId">
+            and t.`INDUSTRYNAME` = #{require.industryId}
+        </if>
+        <if test="null != require.requireName">
+            and t.`REQUIRENAME` like concat('%',#{require.requireName},'%')
+        </if>
+        <if test="null != require.cityName">
+            AND t.`CITYNAME` =(SELECT tc.`CITY_NAME` FROM `T_BAIDU_CITY` tc WHERE tc.`CITY_ID`=#{require.cityName})
+        </if>
+        UNION ALL
+        SELECT tel.`ID` AS requireId,tel.`TECH_NAME` AS requireName ,tel.`PRICE` AS unitPrice,tel.`SERVER_REMARK` AS introduce,
+        tel.`RESULT` AS STATUS,tc.`CITY_NAME` AS cityName,tp.`PROVINCE_NAME` AS provinceName,tcrt.`NAME` AS industryName,
+        tbu.`USERNAME` AS requireUserName,tsb.`NAME` AS requireType,tel.`USERID`,
+        tbu.`PHOTO` AS requireUserPhoto,tel.`CREATE_TIME` AS createTime,tel.source,16 AS projectType,tbu.`TYPE` as userType
+        FROM T_TECHOLOGY_INFO tel
+        LEFT JOIN T_SERVER_BUSINESS tsb ON tsb.`ID` = tel.`BUSINESS_TYPE`
+        LEFT JOIN `T_SCIENCE_REQUIRE_TYPE` tcrt ON (tcrt.`ID` = tel.`INTELLECTUALTYPE`)
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = tel.`USERID`
+        LEFT JOIN `T_BAIDU_CITY` tc ON tc.`CITY_ID` = tel.`CITY_ID`
+        LEFT JOIN `T_BAIDU_PROVINCE` tp ON tp.`PROVINCE_ID` = tc.`PROVINCE_ID`
+        WHERE tel.`CHECK_TYPE`=2
+        <if test="null != require.requireId">
+            and tel.`ID` = #{require.requireId}
+        </if>
+        <if test="null != require.requireType">
+            and tel.`BUSINESS_TYPE` = #{require.requireType}
+        </if>
+        <if test="null != require.industryId">
+            and tel.`INTELLECTUALTYPE` = #{require.industryId}
+        </if>
+        <if test="null != require.requireName">
+            and tel.`KEY_WORD` like concat('%',#{require.requireName},'%')
+        </if>
+        <if test="null != require.cityName">
+            and tel.`CITY_ID` = #{require.cityName}
+        </if>
+        <if test="null != require.status">
+            and tel.`STATUS` = #{require.status}
+        </if>
+        ) af
+        where 1=1
+        <if test="null != require.userType">
+            and af.projectType = #{require.userType}
+        </if>
+        ORDER BY af.createTime DESC
+    </select>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.user.mapper.AddressManageMapper">
+
+    <select id="qryAddressManageList" resultType="com.bhw.user.pojo.AddressManage">
+        SELECT ta.*,tbc.`CITY_NAME` AS cityName,tbp.`PROVINCE_NAME` AS provinceName FROM `T_ADDRESS_MANAGE` ta
+        LEFT JOIN `T_BAIDU_CITY` tbc ON tbc.`CITY_ID` = ta.`AREA`
+        LEFT JOIN `T_BAIDU_PROVINCE` tbp ON tbp.`PROVINCE_ID` = tbc.`PROVINCE_ID`
+        where 1=1
+        <if test="null !=addressManage.userId">
+            and ta.USERID = #{addressManage.userId}
+        </if>
+        <if test="null !=addressManage.id">
+            and ta.ID = #{addressManage.id}
+        </if>
+        ORDER BY ta.`CREATETIME` DESC
+    </select>
+
+</mapper>

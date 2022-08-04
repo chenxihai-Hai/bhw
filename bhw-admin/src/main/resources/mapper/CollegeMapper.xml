@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.admin.mapper.CollegeMapper">
+    <resultMap id="COLLEGES_MAP" type="com.bhw.admin.vo.CollegesVo">
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="TYPE" property="type" jdbcType="INTEGER"/>
+        <result column="NAME" property="collegeName" jdbcType="VARCHAR"/>
+        <result column="PHOTO" property="collegePhoto" jdbcType="VARCHAR"/>
+        <result column="URL" property="collegeUrl" jdbcType="VARCHAR"/>
+        <result column="PROVINCE_NAME" property="collegeProvince" jdbcType="VARCHAR"/>
+        <result column="CITY_NAME" property="collegeCity" jdbcType="VARCHAR"/>
+        <result column="INTRODUCE" property="introduce" jdbcType="VARCHAR"/>
+        <result column="INTRODUCEIMG" property="introduceImg" jdbcType="VARCHAR"/>
+        <result column="ACADEMICIAN" property="academician" jdbcType="VARCHAR"/>
+        <result column="ACADEMICIANIMG" property="academicianimg" jdbcType="VARCHAR"/>
+        <result column="ACADEMICIANREMARK" property="academicianremark" jdbcType="VARCHAR"/>
+        <result column="ACADEMICIANDUTY" property="academicianduty" jdbcType="VARCHAR"/>
+        <result column="ENNAME" property="enName" jdbcType="VARCHAR"/>
+    </resultMap>
+      <select id="selectCollegeCountByType" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+          SELECT count(*) FROM T_SCHOOL
+          <if test="type !=null">
+              WHERE  TYPE=#{type}
+          </if>
+      </select>
+    <select id="selectCollegeByType" resultMap="COLLEGES_MAP" parameterType="java.lang.Integer">
+        SELECT t.`NAME`,t.PHOTO,t.URL,c.CITY_NAME,p.PROVINCE_NAME,t.`INTRODUCE`,t.`INTRODUCEIMG`,t.ENNAME,
+        t.`ID`,t.`ACADEMICIAN`,t.`ACADEMICIANIMG`,t.`ACADEMICIANREMARK`,t.`ACADEMICIANDUTY`,t.`TYPE`,t.CREATETIME from T_SCHOOL t
+        LEFT JOIN T_BAIDU_CITY c on t.CITY_ID=c.CITY_ID
+        LEFT JOIN T_BAIDU_PROVINCE p on c.PROVINCE_ID=p.PROVINCE_ID
+        WHERE t.TYPE=#{type}
+        ORDER BY CREATETIME DESC
+    </select>
+
+    <select id="selectCollegeList" resultType="com.bhw.admin.pojo.SchoolBean">
+        SELECT t.*,c.CITY_NAME as collegeCity,p.PROVINCE_NAME as collegeProvince
+        from T_SCHOOL t
+        LEFT JOIN T_BAIDU_CITY c on t.CITY_ID=c.CITY_ID
+        LEFT JOIN T_BAIDU_PROVINCE p on c.PROVINCE_ID=p.PROVINCE_ID
+        WHERE 1=1
+        <if test="null != sh.type">
+            and t.TYPE=#{sh.type}
+        </if>
+        <if test="null != sh.name">
+            and t.name like concat('%',#{sh.name},'%')
+        </if>
+        ORDER BY CREATETIME DESC
+    </select>
+</mapper>

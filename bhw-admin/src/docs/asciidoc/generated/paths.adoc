@@ -1,0 +1,157 @@
+
+[[_paths]]
+== Paths
+
+[[_getbrokerlistusingget]]
+=== getBrokerList
+....
+GET /thirdPartyApi/getBrokerList
+....
+
+
+==== Description
+获取经纪人列表
+
+
+==== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**200**|OK|string
+|**401**|Unauthorized|No Content
+|**403**|Forbidden|No Content
+|**404**|Not Found|No Content
+|===
+
+
+==== Consumes
+
+* `application/json`
+
+
+==== Produces
+
+* `application/json`
+
+
+==== Tags
+
+* thirdPartyApi
+
+
+[[_getexpertlistusingget]]
+=== getExpertList
+....
+GET /thirdPartyApi/getExpertList
+....
+
+
+==== Description
+获取专家列表
+
+
+==== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**200**|OK|string
+|**401**|Unauthorized|No Content
+|**403**|Forbidden|No Content
+|**404**|Not Found|No Content
+|===
+
+
+==== Consumes
+
+* `application/json`
+
+
+==== Produces
+
+* `*/*`
+
+
+==== Tags
+
+* thirdPartyApi
+
+
+[[_getprojectsummaryusingget]]
+=== getProjectSummary
+....
+GET /thirdPartyApi/getProjectSummary
+....
+
+
+==== Description
+获取科技成果项目列表
+
+
+==== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**200**|OK|string
+|**401**|Unauthorized|No Content
+|**403**|Forbidden|No Content
+|**404**|Not Found|No Content
+|===
+
+
+==== Consumes
+
+* `application/json`
+
+
+==== Produces
+
+* `*/*`
+
+
+==== Tags
+
+* thirdPartyApi
+
+
+[[_getschoolbadgeusingget]]
+=== getSchoolBadge
+....
+GET /thirdPartyApi/getSchoolBadge
+....
+
+
+==== Description
+获取高校校徽
+
+
+==== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**200**|OK|string
+|**401**|Unauthorized|No Content
+|**403**|Forbidden|No Content
+|**404**|Not Found|No Content
+|===
+
+
+==== Consumes
+
+* `application/json`
+
+
+==== Produces
+
+* `*/*`
+
+
+==== Tags
+
+* thirdPartyApi
+
+
+

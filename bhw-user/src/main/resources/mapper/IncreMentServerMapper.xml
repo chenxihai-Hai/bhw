@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.user.mapper.IncreMentServerMapper">
+    <insert id="insertMoreTwo" parameterType="java.util.List">
+        insert INTO  T_INCREMENT_SERVER(ID,USERID,SERVERID,EXPIRETIME,STATUS,CREATETIME)
+        VALUES
+        <foreach collection="list" index="index" separator="," item="item">
+            (#{item.id},#{item.userId},#{item.serverId},#{item.expireTime},#{item.status},#{item.createTime})
+        </foreach>
+
+    </insert>
+</mapper>

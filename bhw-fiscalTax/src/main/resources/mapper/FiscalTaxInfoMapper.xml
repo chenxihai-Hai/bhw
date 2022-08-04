@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.fiscalTax.mapper.FiscalTaxInfoMapper">
+    <resultMap id="SERVERLIST_MAP" type="com.bhw.fiscalTax.vo.ServerListPageVo">
+        <result column="SERVER_NAME" property="serverName" jdbcType="VARCHAR"/>
+        <result column="NAME" property="intellectualName" jdbcType="VARCHAR"/>
+        <result column="BUDGET" property="budget" jdbcType="VARCHAR"/>
+        <result column="SERVER_REMARK" property="serverRemark" jdbcType="VARCHAR"/>
+        <result column="NAME" property="businessName" jdbcType="VARCHAR"/>
+        <result column="PROVINCE_NAME" property="provinceName" jdbcType="VARCHAR"/>
+        <result column="CITY_NAME" property="cityName" jdbcType="VARCHAR"/>
+        <result column="CHECK_TYPE" property="checkType" jdbcType="INTEGER"/>
+        <result column="RESULT" property="result" jdbcType="INTEGER"/>
+        <result column="STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+    </resultMap>
+    <insert id="saveInfo" parameterType="com.bhw.fiscalTax.pojo.FiscalTaxInfo">
+        INSERT INTO T_FISCALTAX_INFO
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null">
+                ID,
+            </if>
+            <if test="checkType !=null">
+                CHECK_TYPE,
+            </if>
+            <if test="businessType !=null">
+                BUSINESS_TYPE,
+            </if>
+            <if test="onPriceType !=null">
+                ON_PRICE_TYPE,
+            </if>
+            <if test="originalPrice !=null">
+                ORIGINAL_PRICE,
+            </if>
+            <if test="price !=null">
+                PRICE,
+            </if>
+            <if test="budget !=null">
+                BUDGET,
+            </if>
+            <if test="address !=null">
+                ADDRESS,
+            </if>
+            <if test="cityId !=null">
+                CITY_ID,
+            </if>
+            <if test="freightType !=null">
+                FREIGHT_TYPE,
+            </if>
+            <if test="contactName !=null">
+                CONTACT_NAME,
+            </if>
+            <if test="contactUnit !=null">
+                CONTACT_UNIT,
+            </if>
+            <if test="keyWord !=null">
+                KEY_WORD,
+            </if>
+            <if test="intellectualType !=null">
+                INTELLECTUALTYPE,
+            </if>
+            <if test="serverName !=null">
+                SERVER_NAME,
+            </if>
+            <if test="serverRemark !=null">
+                SERVER_REMARK,
+            </if>
+            <if test="result !=null">
+                RESULT,
+            </if>
+            <if test="createTime !=null">
+                CREATE_TIME,
+            </if>
+            <if test="status !=null">
+                STATUS,
+            </if>
+            <if test="userId !=null">
+                USERID,
+            </if>
+            <if test="source !=null">
+                SOURCE,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id !=null">
+                #{id},
+            </if>
+            <if test="checkType !=null">
+                #{checkType},
+            </if>
+            <if test="businessType !=null">
+               #{businessType},
+            </if>
+            <if test="onPriceType !=null">
+                #{onPriceType},
+            </if>
+            <if test="originalPrice !=null">
+                #{originalPrice},
+            </if>
+            <if test="price !=null">
+                #{price},
+            </if>
+            <if test="budget !=null">
+                #{budget},
+            </if>
+            <if test="address !=null">
+                #{address},
+            </if>
+            <if test="cityId !=null">
+                #{cityId},
+            </if>
+            <if test="freightType !=null">
+                #{freightType},
+            </if>
+            <if test="contactName !=null">
+                #{contactName},
+            </if>
+            <if test="contactUnit !=null">
+               #{contactUnit},
+            </if>
+            <if test="keyWord !=null">
+                #{keyWord},
+            </if>
+            <if test="intellectualType !=null">
+                #{intellectualType},
+            </if>
+            <if test="serverName !=null">
+                #{serverName},
+            </if>
+            <if test="serverRemark !=null">
+                #{serverRemark},
+            </if>
+            <if test="result !=null">
+                #{result},
+            </if>
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+            <if test="status !=null">
+                #{status},
+            </if>
+            <if test="userId !=null">
+                #{userId},
+            </if>
+            <if test="source !=null">
+                #{source},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectServerList" resultMap="SERVERLIST_MAP" parameterType="com.bhw.fiscalTax.dto.ServerListPageReq">
+        select f.ID,f.SERVER_NAME,f.SERVER_REMARK,f.BUDGET,f.CHECK_TYPE,sb.NAME,f.RESULT,t.`NAME` ,p.PROVINCE_NAME, c.CITY_NAME,f.STATUS
+        from T_FISCALTAX_INFO f
+        LEFT JOIN T_INTELLECTUAL_PROJECT_TYPE t on f.INTELLECTUALTYPE=t.ID
+        LEFT JOIN T_SERVER_BUSINESS sb on sb.ID=f.BUSINESS_TYPE
+        LEFT JOIN T_BAIDU_CITY c on f.CITY_ID=c.CITY_ID
+        LEFT JOIN T_BAIDU_PROVINCE p on c.PROVINCE_ID=p.PROVINCE_ID
+        WHERE 1=1
+        <if test="req.STATUS ==null">
+            AND f.STATUS=2
+        </if>
+        <if test="req.checkType !=null">
+            AND f.CHECK_TYPE=#{req.checkType}
+        </if>
+        <if test="req.businessType !=null">
+            AND f.BUSINESS_TYPE=#{req.businessType}
+        </if>
+        <if test="req.startTime !=null and req.startTime !='' and req.endTime !=null and req.endTime !=''">
+            AND f.CREATE_TIME BETWEEN #{req.startTime} AND #{req.endTime}
+        </if>
+        ORDER  BY f.CREATE_TIME DESC
+    </select>
+    <select id="backSelectServerList" resultType="com.bhw.fiscalTax.pojo.FiscalTaxInfo" parameterType="com.bhw.fiscalTax.dto.ServerListPageReq">
+        SELECT f.*,sb.NAME AS businessName ,p.PROVINCE_NAME AS provinceName, c.CITY_NAME AS cityName,u.USERNAME as publisher
+        FROM T_FISCALTAX_INFO f
+        LEFT JOIN T_SERVER_BUSINESS sb ON sb.ID=f.BUSINESS_TYPE
+        LEFT JOIN T_BAIDU_CITY c ON f.CITY_ID=c.CITY_ID
+        LEFT JOIN T_BAIDU_PROVINCE p ON c.PROVINCE_ID=p.PROVINCE_ID
+        left join T_BHW_USER u on u.ID=f.USERID
+        WHERE 1=1
+        <if test="req.checkType !=null">
+            AND f.CHECK_TYPE=#{req.checkType}
+        </if>
+        <if test="req.businessType !=null">
+            AND f.BUSINESS_TYPE=#{req.businessType}
+        </if>
+        <if test="req.businessType !=null">
+            AND f.BUSINESS_TYPE=#{req.businessType}
+        </if>
+        <if test="req.auditStatus !=null">
+            and f.AUDIT_STATUS=#{req.auditStatus}
+        </if>
+        <if test="req.publisher !=null">
+            AND u.USERNAME like  concat('%',#{project.publisher},'%')
+        </if>
+        <if test="req.startTime !=null and req.startTime !='' and req.endTime !=null and req.endTime !=''">
+            AND f.CREATE_TIME BETWEEN #{req.startTime} AND #{req.endTime}
+        </if>
+        ORDER  BY f.CREATE_TIME DESC
+    </select>
+    <update id="updateByIdList" parameterType="java.util.ArrayList">
+        UPDATE T_FISCALTAX_INFO SET
+        STATUS=3
+        WHERE ID in (
+        <foreach collection="list" index="index" separator="," item="item">
+            #{item}
+        </foreach>
+        )
+    </update>
+    <update id="updateAuditStstus">
+        UPDATE T_FISCALTAX_INFO SET
+        AUDIT_STATUS=#{auditStatus}
+        WHERE ID in (
+        <foreach collection="idList" index="index" separator="," item="item">#{item}
+        </foreach>
+        )
+    </update>
+</mapper>

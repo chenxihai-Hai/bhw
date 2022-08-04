@@ -1,0 +1,53 @@
+@charset "utf-8";
+
+/*public*/
+
+/*按钮*/
+.btnColorOrg{background: linear-gradient(0deg,rgba(247,74,13,1) 0%,rgba(250,150,59,1) 100%);font-size: 14px;font-weight: normal;}
+.btnColorBlue{background: #024ECC;font-size: 14px;font-weight: normal;}
+.el-button.el-button--default.btnColorBlue span,.el-button.el-button--default.btnColorOrg span{color: #FFF!important;}
+.btnNoBgd{background: #FFF;border: 0.1px solid #1D1D1D;}
+/**单选框*/
+.radioInfo .el-radio__input.is-checked .el-radio__inner{background: #024ECC;border:1px solid #024ECC;}
+.radioInfo .el-radio__input.is-checked+.el-radio__label{color: #024ECC;}
+
+/*进度条样式*/
+.stepBox .el-step__head.is-finish{color: #F74A0D;border-color: #F74A0D;}
+.stepBox .el-step__title.is-finish{color: #F74A0D;}
+/*.stepBox .el-step__title.is-finish .el-step__icon.is-text{background: #F74A0D;color: #FFF;}*/
+
+/*服务管理公共样式*/
+.useTitle{color: #1D1D1D;font-size: 24px;font-weight: normal;text-align: center;margin: 30px 0;}
+/*顶部菜单*/
+.useMenu{margin: 0 50px;}
+.useMenu.el-menu.el-menu--horizontal{border-bottom: none;}
+.useMenu.el-menu--horizontal > .el-menu-item{height: 59px;line-height: 59px;color: #1D1D1D;font-size: 18px; border:0.1px solid #CCC!important;margin-right: -1px;padding: 0 55px;}
+.useMenu.smallMenu.el-menu--horizontal > .el-menu-item{width: 271px;text-align: center;padding: 0;}
+.useMenu.el-menu--horizontal > .el-menu-item.is-active{background: #024ECC;color: #FFF; box-shadow:0px 8px 7px 0px rgba(0, 0, 0, 0.35);}
+.useMenu.el-menu--horizontal > .el-menu-item:hover:not(.is-active){color: #0B6DB9;}
+.ipt.el-input{width: 62%;}
+
+.el-menu-demo.el-menu--horizontal > .el-menu-item{height: 49px;line-height: 49px;}
+.el-menu-demo.el-menu--horizontal > .el-menu-item.is-active{border-bottom: 2px solid #ca0000;}
+
+.user-tab .el-tabs__header{margin: 0;background: #F8FFD0;}
+.user-tab.el-tabs--card > .el-tabs__header .el-tabs__nav{border: none;}
+/*表格*/
+.user-table{color: #1D1D1D;}
+.user-table.el-table th{background: #F8FFD0;}
+.user-table em{color: #ca0000;font-style: normal;}
+
+.nodata{color: #7D7D7D;font-size: 18px;}
+
+/*服务管理*/
+.jianjie{line-height: 22px; display: flex;}
+.showOrHide{text-align: center;margin: 29px auto 92px;border-bottom: 1px solid #B0B0B0;padding-bottom: 5px;}
+.showOrHide span:after{content: "";border-left: 6px solid transparent;border-right: 6px solid transparent;border-bottom: 12px solid #D8D7D8;position: absolute;top: 2px;right: -20px;}
+.showOrHide span.hideS:after{content: "";border-top: 12px solid #D8D7D8;border-bottom: none;}
+.area-col{display: flex;display: -webkit-flex;align-items: center;-webkit-align-items: center;}
+.area-col .dingwei{margin-right: 10px;}
+
+/*修改密码成功*/
+.updateScuBox{width:344px;height:199px;background:rgba(247,74,13,0.05);margin-top:55px;margin-left: 25px;padding-top: 51px;margin-left: 45px;border-left: 6px solid #F7490D;}
+.updateScuBox i{font-size: 40px;color: #F7490D;text-align: center;display: block;}
+.updateScuBox p{color: #1D1D1D;font-size: 14px;font-weight: normal; text-align: center;margin-top: 19px}

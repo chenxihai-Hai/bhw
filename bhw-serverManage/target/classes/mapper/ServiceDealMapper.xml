@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.serverManage.mapper.ServiceDealMapper">
+
+    <select id="selectServiceDealList" resultType="com.bhw.serverManage.vo.RequireVo">
+        SELECT aql.*,tc.`CITY_NAME` AS cityName,tp.`PROVINCE_NAME` AS provinceName FROM
+        (SELECT tel.`ID` AS requireId,tel.`SERVER_NAME` AS requireName ,tsb.`NAME` AS industryName,tel.`PRICE` AS unitPrice,
+        tel.`SERVER_REMARK` AS introduce,tel.`RESULT` AS STATUS,tel.`USERID`,tbu.`USERNAME` AS requireUserName,tbu.`TYPE` as userType,
+        tbu.`PHOTO` AS requireUserPhoto,tel.`CREATE_TIME` AS createTime,16 AS projectType,tel.`CITY_ID`,tel.`BUSINESS_TYPE`,tel.source
+        FROM T_TECHOLOGY_INFO tel
+        LEFT JOIN T_SERVER_BUSINESS tsb ON tsb.`ID` = tel.`BUSINESS_TYPE`
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = tel.`USERID`
+        WHERE tel.`CHECK_TYPE`=1
+        <if test="null != require.submitSt">
+            and tel.`STATUS`= #{require.submitSt}
+        </if>
+        UNION ALL
+        SELECT tes.`ID` AS requireId,tes.`SERVER_NAME` AS requireName ,tsb.`NAME` AS industryName,tes.`PRICE` AS unitPrice,
+        tes.`SERVER_REMARK` AS introduce,tes.`RESULT` AS STATUS,tes.`USERID`,tbu.`USERNAME` AS requireUserName,tbu.`TYPE` as userType,
+        tbu.`PHOTO` AS requireUserPhoto,tes.`CREATE_TIME` AS createTime,tes.`BUSINESS_TYPE`+7 AS projectType,tes.`CITY_ID`,tes.`BUSINESS_TYPE`,tes.source
+        FROM T_TECHSUPPLY_INFO tes
+        LEFT JOIN T_SERVER_BUSINESS tsb ON tsb.`ID` = tes.`BUSINESS_TYPE`
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = tes.`USERID`
+        WHERE tes.`CHECK_TYPE`=1
+        <if test="null != require.submitSt">
+            and tes.`STATUS`= #{require.submitSt}
+        </if>
+        UNION ALL
+        SELECT tls.`ID` AS requireId,tls.`SERVER_NAME` AS requireName ,tsb.`NAME` AS industryName,tls.`PRICE` AS unitPrice,
+        tls.`SERVER_REMARK` AS introduce,tls.`RESULT` AS STATUS,tls.`USERID`,tbu.`USERNAME` AS requireUserName,tbu.`TYPE` as userType,
+        tbu.`PHOTO` AS requireUserPhoto,tls.`CREATE_TIME` AS createTime,11 AS projectType,tls.`CITY_ID`,tls.`BUSINESS_TYPE`,tls.source
+        FROM T_LEGALSERVER_INFO tls
+        LEFT JOIN T_SERVER_BUSINESS tsb ON tsb.`ID` = tls.`BUSINESS_TYPE`
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = tls.`USERID`
+        WHERE tls.`CHECK_TYPE`=1
+        <if test="null != require.submitSt">
+            and tls.`STATUS`= #{require.submitSt}
+        </if>
+        UNION ALL
+        SELECT tft.`ID` AS requireId,tft.`SERVER_NAME` AS requireName ,tsb.`NAME` AS industryName,tft.`PRICE` AS unitPrice,
+        tft.`SERVER_REMARK` AS introduce,tft.`RESULT` AS STATUS,tft.`USERID`,tbu.`USERNAME` AS requireUserName,tbu.`TYPE` as userType,
+        tbu.`PHOTO` AS requireUserPhoto,tft.`CREATE_TIME` AS createTime,14 AS projectType,tft.`CITY_ID`, tft.`BUSINESS_TYPE`,tft.source
+        FROM T_FISCALTAX_INFO tft
+        LEFT JOIN T_SERVER_BUSINESS tsb ON tsb.`ID` = tft.`BUSINESS_TYPE`
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = tft.`USERID`
+        WHERE tft.`CHECK_TYPE`=1
+        <if test="null != require.submitSt">
+            and tft.`STATUS`= #{require.submitSt}
+        </if>
+        )
+        aql
+        LEFT JOIN `T_BAIDU_CITY` tc ON tc.`CITY_ID` = aql.`CITY_ID`
+        LEFT JOIN `T_BAIDU_PROVINCE` tp ON tp.`PROVINCE_ID` = tc.`PROVINCE_ID`
+        WHERE 1=1
+            <if test="null != require.projectType">
+                and aql.projectType = #{require.projectType}
+            </if>
+            <if test="null != require.industryId">
+                and aql.`BUSINESS_TYPE` = #{require.industryId}
+            </if>
+            <if test="null != require.cityName">
+                and aql.`CITY_ID` = #{require.cityName}
+            </if>
+            ORDER BY aql.createTime DESC
+    </select>
+</mapper>

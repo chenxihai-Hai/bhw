@@ -1,0 +1,60 @@
+@charset "utf-8";
+*{margin: 0;padding: 0;border: 0;box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;}
+html,body{width: 100%;height: 100%;font-size:14px; font-family: 'SimSun';}
+ul li{list-style: none;}
+
+/*public*/
+.bgColorF{background: #FFF;}
+/**列表页*/
+.listWarp h3{color: #000;font-size: 18px;font-weight: 400; padding-top: 34px;}
+.btnQueryList{width: 84px;height: 36px;padding: 0;border: none;}
+/*按钮*/
+.btnColorOrg{background: linear-gradient(0deg,rgba(247,74,13,1) 0%,rgba(250,150,59,1) 100%);font-size: 14px;border: none;}
+.btnColorBlue{background: #024ECC;font-size: 14px;border: none;}
+.el-button.el-button--default.btnColorBlue span,.el-button.el-button--default.btnColorOrg span{color: #FFF!important;}
+.btnNoBgdOrg{background: #FFF;border: 1px solid #F74A0D;color: #F74A0D;}
+.btnNoBgdBlue{background: #FFF;border: 1px solid #024ecc;color: #024ecc;}
+.el-button--primary {
+    color: #FFF;
+    background-color: #024ecc;
+    border-color: #024ecc;
+}
+.el-button--primary:focus, .el-button--primary:hover {
+    background: #024ecc;
+    border-color: #024ecc;
+    color: #FFF;
+}
+/*弹框*/
+.el-message-box__status.el-icon-warning{color: #ca0000;}
+
+/*table*/
+.tabBox{padding: 20px 12px;}
+.allTable{color: #1D1D1D;}
+.allTable.el-table thead{color: #000;}
+.allTable.el-table th{background: #F8FFD0;}
+.allTable em{color: #ca0000;font-style: normal;}
+/*弹框*/
+.allDialog .el-dialog__header{background: #F8FFD0;padding: 12px 16px 10px;}
+.allDialog .el-dialog__title{color: #1D1D1D;font-size: 16px; line-height: inherit;}
+.allDialog .el-dialog__headerbtn{top: 11px;font-size: 18px;}
+.allDialog .el-form-item__label{color: #1D1D1D;}
+.serviceDialog .el-dialog__header{height: 53px;line-height: 53px; background: #F8FFD0;padding: 0;}
+.serviceDialog .el-dialog__title{color: #1D1D1D;font-size: 18px; line-height: 53px;padding:0 0 0 23px;}
+.serviceDialog .el-dialog__headerbtn{top: 17px;font-size: 18px;}
+.serviceDialog .el-form-item__label,.serviceDialog .el-dialog__headerbtn .el-dialog__close{color: #1D1D1D;}
+
+/*左侧菜单*/
+.menu-icon{width: 18px;height: 18px;text-align: center;margin-right: 20px;display: inline-block;}
+.menu-icon .icon-yonghu{width: 17px;height: 17px;background: url("../images/imgIcon/icon-menu_yonghu.png") no-repeat;display: block;}
+.menu-icon .icon-caiwu{width: 15px;height: 15px;background: url("../images/imgIcon/icon-menu_caiwu.png") no-repeat;display: block;}
+.menu-icon .icon-xinxi{width: 18px;height: 12px;background: url("../images/imgIcon/icon-menu_xinxi.png") no-repeat;display: block;margin-top: 3px;}
+.menu-icon .icon-system{width: 15px;height: 15px;background: url("../images/imgIcon/icon-menu_system.png") no-repeat;display: block;}
+
+/*顶部菜单*/
+.topWrap{height: 39px;background: #141515;}
+.icon-bell{width: 15px;height: 17px;background: url("../images/imgIcon/icon-menu_lingdang.png") no-repeat;display: block;margin-right: 57px;position: relative;}
+.icon-bell:after{content: '';width: 3px;height: 3px;background: #ca0000;border-radius: 50%;position: absolute;top: 0;right: 0;}
+
+/*分页*/
+.pageWrap{padding: 20px 0 56px;text-align: center;}
+.pageBox .el-pager li.active{background:linear-gradient(0deg,rgba(247,74,13,1) 0%,rgba(250,150,59,1) 100%);color: #FFF;border-radius: 2px;}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.admin.mapper.NewsMapper">
+    <resultMap id="Content_Map" type="com.bhw.admin.vo.NewsContentvO">
+        <result column="SUBJECT" jdbcType="VARCHAR" property="subject"/>
+        <result column="ARTICLESOURCE" jdbcType="VARCHAR" property="articleSource"/>
+        <result column="WEBEDITOR" jdbcType="VARCHAR" property="webEditor"/>
+        <result column="AUTHOR" jdbcType="VARCHAR" property="author"/>
+        <result column="SUBTITLE" jdbcType="VARCHAR" property="subtitle"/>
+        <result column="HTML" jdbcType="VARCHAR" property="html"/>
+        <result column="UPLOADTIME" jdbcType="VARCHAR" property="uploadTime"/>
+        <result column="CREATETIME" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <resultMap id="NewsMap" type="com.bhw.admin.vo.NewsVo">
+        <result column="ID" jdbcType="INTEGER" property="id"/>
+        <result column="SUBJECT" jdbcType="VARCHAR" property="subject"/>
+        <result column="FORMAT_TIME" jdbcType="VARCHAR" property="createtime"/>
+        <result column="UPLOADTIME" jdbcType="VARCHAR" property="uploadTime"/>
+        <result column="IMG" jdbcType="VARCHAR" property="img"/>
+    </resultMap>
+    <sql id="BASE_SQL">
+        ID,SUBJECT,CREATETIME,TYPE,ARTICLESOURCE,WEBEDITOR,AUTHOR,HTML
+    </sql>
+     <select id="selectByType" resultMap="NewsMap" parameterType="java.lang.String">
+        SELECT
+        ID,SUBJECT,date_format(CREATETIME,'%m-%d') as FORMAT_TIME,UPLOADTIME,IMG
+        FROM T_NEWS WHERE TYPE=#{type} ORDER BY UPLOADTIME desc
+     </select>
+
+    <select id="selectNewsListPage" resultType="com.bhw.admin.vo.NewsListVo">
+        SELECT ID,SUBJECT  FROM T_NEWS WHERE TYPE=#{type} ORDER BY UPLOADTIME desc
+    </select>
+
+    <select id="selectContentById" resultMap="Content_Map" parameterType="java.lang.Integer">
+         SELECT SUBJECT,ARTICLESOURCE,WEBEDITOR,AUTHOR,SUBTITLE,HTML,CREATETIME,UPLOADTIME
+         FROM T_NEWS WHERE  ID=#{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="upNewsInfo" parameterType="java.lang.Integer">
+        update T_NEWS set img = null where id=#{id}
+    </update>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.user.mapper.EvaluateOrderMapper">
+
+    <select id="qryEvaluateOrderList" resultType="com.bhw.user.pojo.EvaluateOrder">
+        SELECT te.*,tbu.`USERNAME` AS userName,tbu.`PHOTO` AS userPhoto FROM `T_EVALUATE_ORDER` te
+        LEFT JOIN `T_BHW_USER` tbu ON tbu.`ID` = te.`USERID`
+        WHERE 1=1
+        <if test="null !=evaluateOrder.userId">
+            and te.USERID = #{evaluateOrder.userId}
+        </if>
+        <if test="null !=evaluateOrder.productId">
+            and te.PRODUCTID = #{evaluateOrder.productId}
+        </if>
+        <if test="null !=evaluateOrder.orderId">
+            and te.ORDERID = #{evaluateOrder.orderId}
+        </if>
+        <if test="null !=evaluateOrder.tags">
+            and te.tags in (#{evaluateOrder.tags})
+        </if>
+        ORDER BY te.`CREATETIME` DESC
+    </select>
+
+    <select id="statisticsEvaluate" resultType="com.bhw.user.pojo.EvaluateOrder">
+        SELECT (SELECT COUNT(ID) FROM T_EVALUATE_ORDER t WHERE `PRODUCTID`= #{evaluateOrder.productId} AND PRODUCTGRADE>3) AS praise,
+        (SELECT COUNT(ID) FROM T_EVALUATE_ORDER t WHERE `PRODUCTID`= #{evaluateOrder.productId} AND PRODUCTGRADE BETWEEN 2 AND 3) AS commMiddle,
+        (SELECT COUNT(ID) FROM T_EVALUATE_ORDER t WHERE `PRODUCTID`= #{evaluateOrder.productId} AND PRODUCTGRADE =1) AS negative,
+        (SELECT COUNT(ID) FROM T_EVALUATE_ORDER t WHERE `PRODUCTID`= #{evaluateOrder.productId} AND IMGS IS NOT NULL) AS imgnum,
+        SUM(t.`PRODUCTGRADE`) AS grade
+        FROM T_EVALUATE_ORDER t WHERE t.`PRODUCTID`= #{evaluateOrder.productId}
+    </select>
+
+</mapper>

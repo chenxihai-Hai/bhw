@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.user.mapper.BhwUserInitMapper">
+    <update id="upUserInitPw" parameterType="com.bhw.user.pojo.BhwUserInit">
+        update T_BHWUSER_INIT set
+        <if test="passWord!=null">
+            PASSWORD=#{passWord}
+        </if>
+        <if test="payPassWord!=null">
+            PAYPASSWORD=#{payPassWord}
+        </if>
+        where USERID=#{userId}
+    </update>
+    <insert id="insertUserInit" parameterType="com.bhw.user.pojo.BhwUserInit">
+        INSERT  into T_BHWUSER_INIT(USERID,PASSWORD,PAYPASSWORD,CREATETIME)
+        VALUES (#{userId,jdbcType=INTEGER},#{passWord,jdbcType=VARCHAR},#{payPassWord,jdbcType=VARCHAR},#{createTime,jdbcType=DATE})
+    </insert>
+</mapper>

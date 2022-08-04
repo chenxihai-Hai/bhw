@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.bhwtechology.mapper.ServerLeaveMsgMappe">
+    <sql id="BASE_SQL">
+        ID,SERVER_ID,SERVER_NAME,USER_NAME,TYPE,LEAVEMSG_NAME,LEAVEMSG_TYPE,CREATE_TIME
+    </sql>
+    <select id="selectByTypeAndServerId" parameterType="Map" resultType="com.bhw.bhwtechology.pojo.ServerLeaveMsg">
+        SELECT
+        <include refid="BASE_SQL"/>
+        FROM T_SERVER_LEAVEMSG
+        WHERE SERVER_ID=#{map.serverId}
+        AND TYPE=#{map.type}
+    </select>
+</mapper>

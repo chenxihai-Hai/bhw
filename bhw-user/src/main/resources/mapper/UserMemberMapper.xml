@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.user.mapper.UserMemberMapper">
+
+    <select id="qryUserMemberList" resultType="com.bhw.user.pojo.UserMember">
+        SELECT t.*,tbu.`USERNAME`,tbu.`NICKNAME`,tbu.`PHONENO`,tbu.`EMAIL`,tbu.`SEX` FROM T_USER_MEMBER t
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = t.`USERID`
+        WHERE 1=1
+        <if test="null !=userMember.userName">
+            AND tbu.`USERNAME` like concat('%',#{userMember.userName},'%')
+        </if>
+        <if test="null !=userMember.nickName">
+            AND tbu.`NICKNAME` like concat('%',#{userMember.nickName},'%')
+        </if>
+        <if test="null !=userMember.type">
+            AND t.`TYPE` = #{userMember.type}
+        </if>
+        <if test="null !=userMember.status">
+            AND t.`STATUS` = #{userMember.status}
+        </if>
+        <if test="null !=userMember.time">
+            AND t.`UPDATETIME`  <![CDATA[ >= ]]>  #{userMember.time}
+        </if>
+        ORDER BY t.`CREATETIME` DESC
+    </select>
+
+</mapper>

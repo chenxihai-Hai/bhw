@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.user.mapper.BhwUserMapper">
+    <resultMap id="UserListMap" type="com.bhw.user.vo.UserListVo">
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="USERNAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="MERCHANTFLAG" property="type" jdbcType="INTEGER"/>
+        <result column="STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="PHOTO" property="photo" jdbcType="VARCHAR"/>
+        <result column="SEX" property="sex" jdbcType="INTEGER"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="PHONENO" property="phone" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="AuditUserListMap" type="com.bhw.user.vo.AuditUserListVo">
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="USERNAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="IDCARD" property="card" jdbcType="VARCHAR"/>
+        <result column="COMPANYNAME" property="companyname" jdbcType="VARCHAR"/>
+        <result column="UNITECODE" property="xinyuma" jdbcType="VARCHAR"/>
+        <result column="BUSINESSLICENSEURL" property="picture" jdbcType="VARCHAR"/>
+        <result column="OPERNAME" property="operName" jdbcType="VARCHAR"/>
+        <result column="OPERIDCARD" property="operIdCard" jdbcType="VARCHAR"/>
+        <result column="CONTACTPHONE" property="contactPhone" jdbcType="VARCHAR"/>
+        <result column="MERCHANTFLAG" property="merchantFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="BASE_SQL">
+        ID,USERNAME,PASSWORD,NICKNAME,PHONENO,EMAIL,IDCARD,QQ,WX,PHOTO,SEX,BIRTHDAY,MEMBER,MEMBERGRADE,CREATETIME,STATUS,SUBID
+    </sql>
+    <select id="qryUser" resultType="com.bhw.user.pojo.BhwUser">
+        select * from T_BHW_USER
+    </select>
+    <select id="checkPwd" resultType="com.bhw.user.pojo.BhwUser">
+        SELECT  USERNAME,PASSWORD,ID FROM T_BHW_USER
+        WHERE
+        <if test="phone!=null">
+            PHONENO=#{phone}
+            and type=1
+        </if>
+        <if test="username!=null">
+            ACCOUNT=#{username}
+        </if>
+    </select>
+    <select id="selectByPhone" resultType="com.bhw.user.pojo.BhwUser">
+         select
+           <include refid="BASE_SQL"/>
+         from T_BHW_USER WHERE PHONENO=#{phone}
+    </select>
+
+    <select id="selectByUserName" resultType="com.bhw.user.pojo.BhwUser">
+        select
+        <include refid="BASE_SQL"/>
+        from T_BHW_USER WHERE USERNAME=#{username}
+    </select>
+
+    <update id="updateByPhone" parameterType="com.bhw.user.pojo.BhwUser">
+        UPDATE T_BHW_USER
+        <set>
+            <if test="userName !=null">
+                USERNAME=#{userName}
+            </if>
+            <if test="passWord !=null">
+                PASSWORD=#{passWord}
+            </if>
+            <if test="nickName !=null">
+                NICKNAME=#{nickName}
+            </if>
+            <if test="email !=null">
+                EMAIL=#{email}
+            </if>
+            <if test="idCard !=null">
+                IDCARD=#{idCard}
+            </if>
+            <if test="qq !=null">
+                QQ=#{qq}
+            </if>
+            <if test="wx !=null">
+                WX=#{wx}
+            </if>
+            <if test="photo !=null">
+                PHOTO=#{photo}
+            </if>
+            <if test="sex !=null">
+                SEX=#{sex}
+            </if>
+            <if test="birthday !=null">
+                BIRTHDAY=#{birthday}
+            </if>
+            <if test="member !=null">
+                MEMBER=#{member}
+            </if>
+            <if test="memberGrade !=null">
+                MEMBERGRADE=#{memberGrade}
+            </if>
+            <if test="status !=null">
+                STATUS=#{STATUS}
+            </if>
+            <if test="subId !=null">
+                SUBID=#{subId}
+            </if>
+        </set>
+        WHERE PHONENO=#{phoneNo}
+    </update>
+    <insert id="insertSelective" parameterType="com.bhw.user.pojo.BhwUser">
+        INSERT into T_BHW_USER
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null">
+                ID,
+            </if>
+            <if test="userName !=null">
+                USERNAME,
+            </if>
+            <if test="passWord !=null">
+                PASSWORD,
+            </if>
+            <if test="nickName !=null">
+                NICKNAME,
+            </if>
+            <if test="phoneNo !=null">
+                PHONENO,
+            </if>
+            <if test="email !=null">
+                EMAIL,
+            </if>
+            <if test="idCard !=null">
+                IDCARD,
+            </if>
+            <if test="qq !=null">
+                QQ,
+            </if>
+            <if test="wx !=null">
+                WX,
+            </if>
+            <if test="photo !=null">
+                PHOTO,
+            </if>
+            <if test="sex !=null">
+                SEX,
+            </if>
+            <if test="birthday !=null">
+                BIRTHDAY,
+            </if>
+            <if test="member !=null">
+                MEMBER,
+            </if>
+            <if test="memberGrade !=null">
+                MEMBERGRADE,
+            </if>
+            <if test="status !=null">
+                STATUS,
+            </if>
+            <if test="subId !=null">
+                SUBID,
+            </if>
+            <if test="createTime !=null">
+                CREATETIME,
+            </if>
+            <if test="type !=null">
+                TYPE,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id !=null">
+                #{id},
+            </if>
+            <if test="userName !=null">
+                #{userName},
+            </if>
+            <if test="passWord !=null">
+                #{passWord},
+            </if>
+            <if test="nickName !=null">
+                #{nickName},
+            </if>
+            <if test="phoneNo !=null">
+                #{phoneNo},
+            </if>
+            <if test="email !=null">
+                #{email},
+            </if>
+            <if test="idCard !=null">
+                 #{idCard},
+            </if>
+            <if test="qq !=null">
+                #{qq},
+            </if>
+            <if test="wx !=null">
+                 #{wx},
+            </if>
+            <if test="photo !=null">
+                #{photo},
+            </if>
+            <if test="sex !=null">
+                 #{sex},
+            </if>
+            <if test="birthday !=null">
+                 #{birthday},
+            </if>
+            <if test="member !=null">
+                 #{member},
+            </if>
+            <if test="memberGrade !=null">
+                #{memberGrade},
+            </if>
+            <if test="status !=null">
+                 #{status},
+            </if>
+            <if test="subId !=null">
+                #{subId},
+            </if>
+            <if test="createTime !=null">
+                 #{createTime},
+            </if>
+            <if test="type !=null">
+                #{type},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectIdByPhone" resultType="java.lang.Integer">
+        select ID from T_BHW_USER  WHERE PHONENO=#{phoneNo}
+    </select>
+    <select id="selectPwdByPhone" resultType="java.lang.String">
+         select t_init.`PASSWORD`
+         from T_BHW_USER t_u,T_BHWUSER_INIT t_init
+         WHERE t_u.ID=t_init.USERID AND t_u.PHONENO=#{phone,jdbcType=VARCHAR}
+    </select>
+    <select id="selectUserList" parameterType="com.bhw.user.dto.UserListReq" resultMap="UserListMap">
+        select ID,USERNAME,MERCHANTFLAG,`STATUS`,PHOTO,SEX,EMAIL,PHONENO,NAME
+        from T_BHW_USER
+        WHERE TYPE=#{req.type}
+        <if test="req.userId !=null">
+            and ID=#{req.userId}
+        </if>
+         <if test="req.userName !=null">
+             and USERNAME=#{req.userName}
+         </if>
+        <if test="req.phone !=null">
+            and PHONENO=#{req.phone}
+        </if>
+        <if test="req.email !=null">
+            and EMAIL=#{req.email}
+        </if>
+        <if test="req.statusId !=null">
+            and `STATUS`=#{req.statusId}
+        </if>
+        <if test="req.userType !=null">
+            and MERCHANTFLAG=#{req.userType}
+        </if>
+        <if test="req.sex !=null">
+            and SEX=#{req.sex}
+        </if>
+    </select>
+    <delete id="deleteById" >
+        delete from T_BHW_USER
+        WHERE ID in
+        <foreach collection="idList"  item="item" open="(" separator="," close=")"  >
+            #{item}
+        </foreach>
+    </delete>
+    <update id="updateUserList" parameterType="com.bhw.user.dto.EditUserReq">
+        update T_BHW_USER
+        set USERNAME=#{req.userName}
+        , PHONENO=#{req.phoneNo}
+        , EMAIL=#{req.emall}
+        <if test="req.photo !=null">
+            , PHOTO=#{req.photo}
+        </if>
+        , SEX=#{req.sex}
+        WHERE ID=#{req.id}
+    </update>
+    <select id="selectAuditUserList" resultMap="AuditUserListMap">
+        select t.ID,t.USERNAME,t.NAME,t.IDCARD,c.COMPANYNAME,t.MERCHANTFLAG,
+         c.UNITECODE,c.BUSINESSLICENSEURL,c.OPERNAME
+        ,c.CONTACTPHONE,c.OPERIDCARD from T_BHW_USER t
+        LEFT JOIN T_BHWCOMPANY_CARD c on t.ID=c.USERID
+        WHERE t.TYPE=#{type} and t.MERCHANTFLAG=3
+    </select>
+    <update id="updateAuditStstus">
+        <foreach collection="idList" index="index" separator="," item="item">
+            UPDATE T_BHW_USER SET
+            MERCHANTFLAG=#{auditStatus},
+            AUDITTIME=now()
+            WHERE ID=#{item}
+        </foreach>
+    </update>
+    <select id="selectCountByMember"  resultType="java.lang.Integer">
+        select count(*) from T_BHW_USER where 1=1
+        <if test="type !=null and type !=1 and type !=0">
+            and MEMBER=#{type}
+        </if>
+        <if test="type ==0">
+            and MERCHANTFLAG=1
+        </if>
+    </select>
+    <select id="selectWeekAdd" resultType="java.util.Map">
+        select
+            count(*) as count,
+        <if test="null == merchantFlag ">
+            DATE_FORMAT(CREATETIME,'%m-%d') AS date
+        </if>
+        <if test="null != merchantFlag ">
+            DATE_FORMAT(AUDITTIME,'%m-%d') AS date
+        </if>
+            from T_BHW_USER
+            where 1=1
+            <if test="null == merchantFlag ">
+                and CREATETIME
+                BETWEEN #{startTime} AND #{endTime}
+            </if>
+            <if test="member !=null">
+                and MEMBER=#{member}
+            </if>
+            <if test="merchantFlag !=null">
+              and MERCHANTFLAG=#{merchantFlag}
+              and AUDITTIME
+                BETWEEN #{startTime} AND #{endTime}
+            </if>
+            GROUP BY
+                date
+            ORDER BY
+	          date ASC
+    </select>
+
+    <update id="updateUserTxAccount">
+        UPDATE T_BHW_USER SET
+        <if test="1==user.type">
+            WX=#{user.wx}
+        </if>
+        <if test="2==user.type">
+            QQ=#{user.qq}
+        </if>
+        <if test="3==user.type">
+            EMAIL=#{user.email}
+        </if>
+        <if test="4==user.type">
+            PHONENO=#{user.phoneNo}
+        </if>
+        where  id = #{user.id}
+    </update>
+</mapper>

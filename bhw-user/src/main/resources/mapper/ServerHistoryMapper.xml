@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.user.mapper.ServerHistoryMapper">
+    <select id="selectByUserIdAndOperateType" parameterType="Map" resultType="com.bhw.user.pojo.ServerHistory">
+        SELECT ID,SERVER_ID,SERVER_NAME,PRICE
+        FROM T_SERVER_HISTORY
+        WHERE USER_ID=#{map.userid} AND OPERATE_TYPE=#{map.operateType}
+    </select>
+    <delete id="deleteRecord" parameterType="java.util.ArrayList">
+        <foreach collection="list" index="index" separator="," item="item">
+            DELETE FROM  T_SERVER_HISTORY WHERE ID=#{item}
+        </foreach>
+    </delete>
+    <select id="selectStatisticsByUserIdAndOperateType" resultType="com.bhw.user.pojo.ServerHistory">
+        SELECT ID,COUNT(`ID`) as counts,CREATE_TIME
+        FROM T_SERVER_HISTORY
+        WHERE USER_ID=#{his.userId} AND OPERATE_TYPE=#{his.operateType} GROUP BY DATE_FORMAT( `CREATE_TIME`, '%Y-%m-%d' )
+        ORDER BY CREATE_TIME DESC
+    </select>
+
+    <select id="selectServerHistoryList" resultType="com.bhw.user.pojo.ServerHistory">
+        SELECT t.*,tbu.USERNAME
+        FROM T_SERVER_HISTORY t
+        left join T_BHW_USER tbu on tbu.id = t.`USER_ID`
+        WHERE 1=1
+        <if test="null != his.userId">
+            and t.`USER_ID` = #{his.userId}
+        </if>
+        <if test="null != his.serverId">
+            and t.`SERVER_ID` = #{his.serverId}
+        </if>
+        <if test="null != his.type">
+            and t.`TYPE` = #{his.type}
+        </if>
+        <if test="null != his.operateType">
+            and t.`OPERATE_TYPE` = #{his.operateType}
+        </if>
+        <if test="null != his.date">
+            and DATE_FORMAT( t.`CREATE_TIME`, '%Y-%m-%d' ) = #{his.date}
+        </if>
+        order by t.`CREATE_TIME` desc
+    </select>
+</mapper>

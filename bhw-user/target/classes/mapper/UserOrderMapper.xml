@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.user.mapper.UserOrderMapper">
+
+    <select id="qryUserOrderList" resultType="com.bhw.user.vo.UserOrderVo">
+        SELECT tor.*,tip.`PROJECTNAME` AS ITEMNAME ,tip.`HOMEIMG` AS ITEMLOGO,tp.`PRODUCTID`,tp.`PROTOCOLURL`,tbu.`USERNAME` AS sellerName,tbu.`ID` as sellerUserId
+        FROM `T_ORDER_USER` tu
+        LEFT JOIN `T_ORDER` tor ON tor.`ORDERID` = tu.`ORDERID`
+        LEFT JOIN `T_ORDER_PRODUCT` tp ON tp.`ORDERID` = tor.`ORDERID`
+        LEFT JOIN `T_INTELLECTUAL_PROJECT` tip ON tip.`ID` = tp.`PRODUCTID`
+        LEFT JOIN `T_BHW_USER` tbu ON tbu.`ID` = tip.`USERID`
+        WHERE tu.`USERID`=#{userOrderVo.userId}
+        <if test="userOrderVo.status!=null">
+            and tor.STATUS = #{userOrderVo.status}
+        </if>
+        <if test="userOrderVo.orderVague!=null">
+            and (tor.`ORDERID` like concat('%',#{userOrderVo.orderVague},'%') or
+            tor.`ORDERNUM` like concat('%',#{userOrderVo.orderVague},'%') or
+            tor.`ITEMNAME` like concat('%',#{userOrderVo.orderVague},'%') )
+        </if>
+        order by tu.CREATETIME desc
+    </select>
+
+    <select id="qryPayDealList" resultType="com.bhw.user.vo.UserOrderVo">
+        SELECT * FROM (
+        SELECT tor.`ORDERID`,tor.`ORDERNUM`,tor.`TOTALPRICE`,tor.`PAYSTATUS`,tip.`PROJECTNAME` AS ITEMNAME ,
+        tip.`HOMEIMG` AS ITEMLOGO,tp.`PRODUCTID`,tp.`PROTOCOLURL`,tbu.`USERNAME` AS sellerName,tor.`CREATETIME`,0 AS dealType
+        FROM `T_ORDER_USER` tu
+        LEFT JOIN `T_ORDER` tor ON tor.`ORDERID` = tu.`ORDERID`
+        LEFT JOIN `T_ORDER_PRODUCT` tp ON tp.`ORDERID` = tor.`ORDERID`
+        LEFT JOIN `T_INTELLECTUAL_PROJECT` tip ON tip.`ID` = tp.`PRODUCTID`
+        LEFT JOIN `T_BHW_USER` tbu ON tbu.`ID` = tip.`USERID`
+        WHERE tu.`USERID`=#{userOrderVo.userId} AND tor.`PAYSTATUS`=2
+        UNION ALL
+        SELECT t.`ORDERID`,t.`ORDERNUM`,t.`TOTALPRICE`,t.`PAYSTATUS`,'' AS ITEMNAME ,'' AS ITEMLOGO,'','','官方' AS sellerName,
+        t.CREATETIME,t.dealType
+        FROM T_WALLET_ORDER t WHERE t.userid=#{userOrderVo.userId}  AND t.`PAYSTATUS`=2
+        ) af
+        where 1=1
+        <if test="null != userOrderVo.orderId">
+            and af.`ORDERID` like  concat('%',#{userOrderVo.orderId},'%')
+        </if>
+        <if test="null != userOrderVo.orderNum">
+            and af.`ORDERNUM` like  concat('%',#{userOrderVo.orderNum},'%')
+        </if>
+        <if test="null != userOrderVo.createTime and null != userOrderVo.updateTime">
+            and DATE_FORMAT( af.`CREATETIME`, '%Y-%m-%d' ) BETWEEN #{userOrderVo.createTime} AND #{userOrderVo.updateTime}
+        </if>
+        ORDER BY af.CREATETIME DESC
+    </select>
+
+
+    <select id="backQryPayDealList" resultType="com.bhw.user.vo.UserOrderVo">
+        SELECT * FROM (
+        SELECT tor.`ORDERID`,tor.`ORDERNUM`,tor.`TOTALPRICE`,tor.`PAYSTATUS`,tip.`PROJECTNAME` AS ITEMNAME ,
+        tip.`HOMEIMG` AS ITEMLOGO,tp.`PRODUCTID`,tp.`PROTOCOLURL`,tbu.`USERNAME` AS sellerName,
+        tbuo.`USERNAME` AS buyerName,tor.`CREATETIME`,tor.UPDATETIME,0 AS dealType,trr.`STATUS` AS refundStatus
+        FROM `T_ORDER_USER` tu
+        LEFT JOIN `T_ORDER` tor ON tor.`ORDERID` = tu.`ORDERID`
+        LEFT JOIN `T_ORDER_PRODUCT` tp ON tp.`ORDERID` = tor.`ORDERID`
+        LEFT JOIN `T_INTELLECTUAL_PROJECT` tip ON tip.`ID` = tp.`PRODUCTID`
+        LEFT JOIN `T_BHW_USER` tbu ON tbu.`ID` = tip.`USERID`
+        LEFT JOIN `T_BHW_USER` tbuo ON tbuo.`ID` = tu.`USERID`
+        LEFT JOIN T_REFUND_RECORD trr ON trr.`ORDERID` = tor.`ORDERID`
+        WHERE tor.`PAYSTATUS`=2 AND tor.`STATUS`=2
+        UNION ALL
+        SELECT t.`ORDERID`,t.`ORDERNUM`,t.`TOTALPRICE`,t.`PAYSTATUS`,'' AS ITEMNAME ,'' AS ITEMLOGO,'',
+        '','官方' AS sellerName,tbuo.`USERNAME` AS buyerName,
+        t.CREATETIME,t.UPDATETIME,t.dealType,0
+        FROM T_WALLET_ORDER t
+        LEFT JOIN `T_BHW_USER` tbuo ON tbuo.`ID` = t.`USERID`
+        WHERE  t.`PAYSTATUS`=2
+        ) af
+        where 1=1
+        <if test="null != userOrderVo.dealType">
+            and af.dealType = #{userOrderVo.dealType}
+        </if>
+        <if test="null != userOrderVo.orderId">
+            and af.`ORDERID` like  concat('%',#{userOrderVo.orderId},'%')
+        </if>
+        <if test="null != userOrderVo.orderNum">
+            and af.`ORDERNUM` like  concat('%',#{userOrderVo.orderNum},'%')
+        </if>
+        <if test="null != userOrderVo.createTime and null != userOrderVo.updateTime">
+            and DATE_FORMAT( af.`CREATETIME`, '%Y-%m-%d' ) BETWEEN #{userOrderVo.createTime} AND #{userOrderVo.updateTime}
+        </if>
+        ORDER BY af.CREATETIME DESC
+    </select>
+
+
+
+
+    <select id="qryUserWalletOrderList" resultType="com.bhw.user.vo.UserOrderVo">
+        SELECT t.* FROM T_WALLET_ORDER t WHERE t.`USERID`=#{userOrderVo.userId}
+        <!--<if test="null != userOrderVo.orderId">
+            and t.`ORDERID` = #{userOrderVo.orderId}
+        </if>
+        where 1=1-->
+        <if test="null != userOrderVo.orderId">
+            and t.`ORDERID` like  concat('%',#{userOrderVo.orderId},'%')
+        </if>
+        <if test="null != userOrderVo.orderNum">
+            and t.`ORDERNUM` like  concat('%',#{userOrderVo.orderNum},'%')
+        </if>
+        <!--<if test="null != userOrderVo.createTime">
+            and t.CREATETIME >= DATE_SUB(CURDATE(),INTERVAL 1 DAY)
+        </if>-->
+        <if test="null != userOrderVo.createTime and null != userOrderVo.updateTime">
+            and DATE_FORMAT( t.`CREATETIME`, '%Y-%m-%d' ) BETWEEN #{userOrderVo.createTime} AND #{userOrderVo.updateTime}
+        </if>
+        order by t.CREATETIME desc
+    </select>
+
+    <select id="backQryWalletOrderList" resultType="com.bhw.user.vo.UserOrderVo">
+        SELECT t.*,tbu.`USERNAME` AS buyerName,(SELECT MAX(TOTALPRICE) FROM T_WALLET_ORDER WHERE `DEALTYPE`=3 ) AS vipType
+        FROM T_WALLET_ORDER t
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = t.`USERID`
+        WHERE 1=1
+        <if test="null != userOrderVo.dealType">
+            and t.`DEALTYPE` =  #{userOrderVo.dealType}
+        </if>
+        <if test="null != userOrderVo.vipType">
+            and t.`TOTALPRICE` =  #{userOrderVo.vipType}
+        </if>
+        <if test="null != userOrderVo.orderId">
+            and t.`ORDERID` like  concat('%',#{userOrderVo.orderId},'%')
+        </if>
+        <if test="null != userOrderVo.orderNum">
+            and t.`ORDERNUM` like  concat('%',#{userOrderVo.orderNum},'%')
+        </if>
+        <if test="null != userOrderVo.createTime">
+            and t.CREATETIME >= DATE_SUB(CURDATE(),INTERVAL 1 DAY)
+        </if>
+        order by t.CREATETIME desc
+    </select>
+
+    <update id="upUserOrderStatus" parameterType="com.bhw.user.vo.UserOrderVo">
+        update T_ORDER set
+        <if test="userOrderVo.status!=null">
+            STATUS=#{userOrderVo.status}
+        </if>
+        <if test="userOrderVo.payStatus!=null">
+            CLOSESTATUS=#{userOrderVo.payStatus}
+        </if>
+        where ORDERID=#{userOrderVo.orderId}
+    </update>
+    <update id="upUserOrderProtocol" parameterType="com.bhw.user.vo.UserOrderVo">
+        update T_ORDER_PRODUCT set
+        <if test="userOrderVo.protocolUrl!=null">
+            PROTOCOLURL=#{userOrderVo.protocolUrl}
+        </if>
+        where ORDERID=#{userOrderVo.orderId} and PRODUCTID=#{userOrderVo.productId}
+    </update>
+    <select id="getStUserWalletMy"  resultType="com.bhw.user.vo.UserOrderVo">
+         SELECT SUM(tor.`TOTALPRICE`) AS totalPrice,GROUP_CONCAT(CONCAT(tor.`ORDERID`)) AS orderId FROM `T_ORDER` tor
+        LEFT JOIN `T_ORDER_USER` tou ON tou.`ORDERID` = tor.`ORDERID`
+        LEFT JOIN `T_BHW_USER` tbu ON tbu.`ID` = tou.`USERID`
+        LEFT JOIN `T_ORDER_PRODUCT` top ON tor.`ORDERID` = top.`ORDERID`
+        LEFT JOIN `T_INTELLECTUAL_PROJECT` tnp ON top.`PRODUCTID` = tnp.`ID`
+        WHERE tnp.`USERID` = #{userOrderVo.userId} AND tor.`STATUS`=#{userOrderVo.status}
+        <if test="null!=userOrderVo.payStatus">
+            AND tor.`CLOSESTATUS`= #{userOrderVo.payStatus}
+        </if>
+    </select>
+</mapper>

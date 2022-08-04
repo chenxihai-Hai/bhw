@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.admin.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.bhw.admin.pojo.ListingExpert">
+        <result column="USERNAME" jdbcType="VARCHAR" property="username"/>
+        <result column="PHOTO" jdbcType="VARCHAR" property="photo"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="DUTYNAME" jdbcType="VARCHAR" property="duTyName"/>
+    </resultMap>
+    <select id="qryUser" resultType="com.bhw.admin.pojo.UserMbBean">
+        select * from T_USER
+    </select>
+
+    <select id="selectByTypeAndBrokerid" resultType="com.bhw.admin.pojo.UserMbBean">
+        SELECT  *
+        FROM T_USER
+        WHERE type=2   and brokerid=#{brokerid}
+    </select>
+
+    <select id="selectListingExpert" resultMap="BaseResultMap">
+        select t.USERNAME,t.PHOTO,t.REMARK,d.DUTYNAME from T_USER t LEFT JOIN T_DUTY d on t.DUTYID=d.DUTYID WHERE  t.TYPE=3
+        ORDER BY t.ID DESC
+    </select>
+    <insert id="insertBorker" parameterType="com.bhw.admin.pojo.UserBean">
+        INSERT INTO T_USER
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null">
+                ID,
+            </if>
+            <if test="userName !=null">
+                USERNAME,
+            </if>
+            <if test="phone !=null">
+                PHONE,
+            </if>
+            <if test="photo !=null">
+                PHOTO,
+            </if>
+            <if test="type !=null">
+                TYPE,
+            </if>
+            <if test="dutyId !=null">
+                DUTYID,
+            </if>
+            <if test="professionId !=null">
+                PROFESSIONID,
+            </if>
+            <if test="borkerId !=null">
+                BROKERID,
+            </if>
+            <if test="remark !=null">
+                REMARK,
+            </if>
+            <if test="createTime !=null">
+                CREATETIME,
+            </if>
+            <if test="isListed !=null">
+                ISLISTED,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id !=null">
+                #{id},
+            </if>
+            <if test="userName !=null">
+                #{userName},
+            </if>
+            <if test="phone !=null">
+                #{phone},
+            </if>
+            <if test="photo !=null">
+                #{photo},
+            </if>
+            <if test="type !=null">
+                #{type},
+            </if>
+            <if test="dutyId !=null">
+                #{dutyId},
+            </if>
+            <if test="professionId !=null">
+                #{professionId},
+            </if>
+            <if test="borkerId !=null">
+                #{borkerId},
+            </if>
+            <if test="remark !=null">
+                #{remark},
+            </if>
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+            <if test="isListed !=null">
+                #{isListed},
+            </if>
+        </trim>
+    </insert>
+</mapper>

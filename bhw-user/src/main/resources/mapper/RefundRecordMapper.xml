@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.user.mapper.RefundRecordMapper">
+
+    <select id="qryRefundRecordList" resultType="com.bhw.user.pojo.RefundRecord">
+        SELECT tr.*,tip.`HOMEIMG` AS itemLogo,tip.`PROJECTNAME` AS itemName,tor.`PAYSTATUS` FROM `T_REFUND_RECORD` tr
+        LEFT JOIN `T_ORDER` tor ON tor.`ORDERID` = tr.`ORDERID`
+        LEFT JOIN `T_ORDER_PRODUCT` top ON top.`ORDERID` = tor.`ORDERID`
+        LEFT JOIN `T_INTELLECTUAL_PROJECT` tip ON tip.`ID` = top.`PRODUCTID`
+        WHERE tr.`REFUNDUSERID` = #{refundRecord.refundUserId}
+        order by tr.CREATETIME desc
+    </select>
+
+</mapper>

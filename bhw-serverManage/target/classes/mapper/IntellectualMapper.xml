@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhw.serverManage.mapper.IntellectualMapper">
+
+    <select id="qryIntellectuaOrderList"  resultType="com.bhw.serverManage.vo.OrderVo">
+        SELECT tor.*,tbu.`USERNAME` AS buyerName,tnp.`PROJECTNAME` AS itemName ,tnp.`HOMEIMG` AS itemLogo,
+        top.`PRODUCTID` as productId,top.`PROTOCOLURL` as protocolUrl FROM `T_ORDER` tor
+        LEFT JOIN `T_ORDER_USER` tou ON tou.`ORDERID` = tor.`ORDERID`
+        LEFT JOIN `T_BHW_USER` tbu ON tbu.`ID` = tou.`USERID`
+        LEFT JOIN `T_ORDER_PRODUCT` top ON tor.`ORDERID` = top.`ORDERID`
+        LEFT JOIN `T_INTELLECTUAL_PROJECT` tnp ON top.`PRODUCTID` = tnp.`ID`
+        WHERE tnp.`USERID` = #{projectVo.userId}
+        <if test="null != projectVo.orderNum">
+            and (tor.`ORDERID` like  concat('%',#{projectVo.orderNum},'%') or tor.`ORDERNUM` like  concat('%',#{projectVo.orderNum},'%'))
+        </if>
+         ORDER BY tor.`CREATETIME` DESC
+    </select>
+
+
+    <select id="backQryOrderList"  resultType="com.bhw.serverManage.vo.OrderVo">
+        SELECT tor.*,tbu.`USERNAME` AS buyerName,tbup.`USERNAME` AS sellerName,tnp.`PROJECTNAME` AS itemName ,tnp.`HOMEIMG` AS itemLogo,
+        top.`PRODUCTID` AS productId,top.`PROTOCOLURL` AS protocolUrl ,trr.`STATUS` AS refundStatus
+        FROM `T_ORDER` tor
+        LEFT JOIN `T_ORDER_USER` tou ON tou.`ORDERID` = tor.`ORDERID`
+        LEFT JOIN `T_BHW_USER` tbu ON tbu.`ID` = tou.`USERID`
+        LEFT JOIN `T_ORDER_PRODUCT` top ON tor.`ORDERID` = top.`ORDERID`
+        LEFT JOIN `T_INTELLECTUAL_PROJECT` tnp ON top.`PRODUCTID` = tnp.`ID`
+        LEFT JOIN `T_BHW_USER` tbup ON tbup.`ID` = tnp.`USERID`
+        LEFT JOIN T_REFUND_RECORD trr ON trr.`ORDERID` = tor.`ORDERID`
+        WHERE 1=1
+        <if test="null != projectVo.status">
+            and tor.`STATUS` = #{projectVo.status}
+        </if>
+        <if test="null != projectVo.productId">
+            and tnp.`ID` = #{projectVo.productId}
+        </if>
+        <if test="null != projectVo.orderNum">
+            and (tor.`ORDERID` like  concat('%',#{projectVo.orderNum},'%') or tor.`ORDERNUM` like  concat('%',#{projectVo.orderNum},'%'))
+        </if>
+        ORDER BY tor.`CREATETIME` DESC
+    </select>
+
+    
+    <select id="qryIntellectuaProject" resultType="com.bhw.serverManage.pojo.ServerProjectBean">
+        SELECT t.*,tc.`CITY_NAME` AS cityName,tp.`PROVINCE_NAME` AS provinceName,tpt.`NAME` AS industryName
+        ,tbu.`USERNAME`,tbu.`PHONENO` as contactPhone
+        FROM `T_INTELLECTUAL_PROJECT` t
+        LEFT JOIN `T_BHW_USER` tbu ON tbu.`ID` = t.`USERID`
+        LEFT JOIN `T_INTELLECTUAL_PROJECT_TYPE` tpt ON tpt.`ID` = t.`INDUSTRYID`
+        LEFT JOIN `T_BAIDU_CITY` tc ON tc.`CITY_ID` = t.`CITYID`
+        LEFT JOIN `T_BAIDU_PROVINCE` tp ON tp.`PROVINCE_ID` = tc.`PROVINCE_ID`
+        WHERE 1=1
+        <if test="null != project.id">
+            and t.`ID`=#{project.id}
+        </if>
+        <if test="null != project.userId">
+            and t.`USERID`=#{project.userId}
+        </if>
+        <if test="null != project.priceType">
+            <if test="1 == project.priceType">
+                and (t.`UNITPRICE` is null or t.`UNITPRICE`='')
+            </if>
+            <if test="2 == project.priceType">
+                and (ISNULL(t.`UNITPRICE`) =0 AND LENGTH(TRIM(t.`UNITPRICE`))>0)
+            </if>
+        </if>
+        <if test="null != project.status">
+            and t.`STATUS`=#{project.status}
+        </if>
+        <if test="null == project.status and null == project.contactPhone and project.needType!=2">
+            and t.`STATUS` <![CDATA[ <= ]]> 2
+        </if>
+        <if test="null != project.projectType">
+            and t.`PROJECTTYPE`=#{project.projectType}
+        </if>
+        <if test="null != project.industryId">
+            and t.`INDUSTRYID`=#{project.industryId}
+        </if>
+        <if test="null != project.patentType">
+            and t.`PATENTTYPE`=#{project.patentType}
+        </if>
+        <if test="null != project.needType">
+            and t.`NEEDTYPE`=#{project.needType}
+        </if>
+        <if test="null != project.auditStatus">
+            and t.`AUDITSTATUS`=#{project.auditStatus}
+        </if>
+        <if test="null != project.priceFilter and null == project.priceFilterEnd">
+            and CAST(t.`UNITPRICE` AS SIGNED) <![CDATA[ < ]]> #{project.priceFilter}
+        </if>
+        <if test="null != project.priceFilter and null != project.priceFilterEnd">
+            and CAST(t.`UNITPRICE` AS SIGNED) between #{project.priceFilter} and  #{project.priceFilterEnd}
+        </if>
+        <if test="null != project.projectName">
+            and t.`PROJECTNAME` like  concat('%',#{project.projectName},'%')
+        </if>
+        <if test="null != project.codeNumber and ''!= project.codeNumber">
+            and t.`CODENUMBER` like  concat('%',#{project.codeNumber},'%')
+        </if>
+        <if test="null != project.boutique">
+            and t.`BOUTIQUE` = #{project.boutique}
+        </if>
+        ORDER BY t.`CREATETIME` DESC
+    </select>
+</mapper>

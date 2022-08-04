@@ -1,0 +1,128 @@
+logging:
+  level:
+    tk.mybatis: DEBUG
+    com.bhw.gateway: DEBUG
+server:
+  port: 8760 #正式环境
+  tomcat:
+    basedir: /data/logs/
+spring:
+  application:
+    name: bhw-gateway
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+  #    cloud:
+  #      config:
+  #        profile: config
+  #        label: master
+  #        uri: http://106.53.145.95:8763/ #测试环境
+  ##        uri: http://183.62.138.17:8763/ #正式环境
+  ##        name: gateway,project,server
+  ##        uri: http://localhost:8763/
+  #        name: gateway,qgDbInfo,qgproject
+  #        fail-fast: false
+  #    bus:
+  #      trace:
+  #        enabled: true
+  #      enabled: true
+  #    rabbitmq:
+  #        host: 183.62.138.17
+  #        port: 5672
+  #        username: admin
+  #        password: dqw123
+  bus:
+    trace:
+      enabled: true
+    enabled: true
+  rabbitmq:
+    host: 106.52.237.106
+    port: 5672
+    username: admin
+    password: admin
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 500MB
+
+gate.ignore.startWith: /static,/auth/jwt
+gate.verify.startWith: /payApi
+
+zuul:
+  host:
+    connect-timeout-millis: 60000
+    socket-timeout-millis: 60000
+  ignored-services: "*"
+  prefix: /api
+  ratelimit: # 网关限流
+    enabled: true
+    behind-proxy: true
+    default-policy: #optional - will apply unless specific policy exists
+      limit: 100
+      refresh-interval: 60 #default value (in seconds)
+      type: #optional
+        - user
+        - origin
+        - url
+  routes:
+    adminApi:
+      path: /adminApi/**
+      url: http://localhost:8764/
+      #serviceId: bhw-admin
+    userApi:
+      path: /userApi/**
+      url: http://localhost:8765/
+      #serviceId: bhw-user
+    payApi:
+      path: /payApi/**
+      url: http://localhost:8769/
+      #serviceId: bhw-pay
+    serverManage:
+      path: /serverManage/**
+      url: http://localhost:8766/
+      #serviceId: bhw-serverManage
+    fiscalTaxApi:
+      path: /fiscalTaxApi/**
+      url: http://localhost:8772/
+    legalServerApi:
+      path: /legalServerApi/**
+      url: http://localhost:8773/
+    techSupplyApi:
+      path: /techSupplyApi/**
+      url: http://localhost:8774/
+    techologyApi:
+      path: /techologyApi/**
+      url: http://localhost:8775/
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 1000 ##并发执行的最大线程数，默认10
+      maxQueueSize: 1000 ##BlockingQueue的最大队列数
+      queueSizeRejectionThreshold: 500 ##即使maxQueueSize没有达到，达到queueSizeRejectionThreshold该值后，请求也会被拒绝
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 240000
+
+
+eureka:
+  client:
+    #    register-with-eureka: false
+    serviceUrl:
+      #      defaultZone: http://106.53.145.95:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

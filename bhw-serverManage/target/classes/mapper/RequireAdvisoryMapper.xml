@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.serverManage.mapper.RequireAdvisoryMapper">
+
+
+    <select id="selectRequireAdvisoryList" resultType="com.bhw.serverManage.pojo.RequireAdvisory">
+        SELECT tb.*,tbu.`USERNAME` AS userName,tbu.`PHOTO` AS userPhoto,tu.`USERNAME` AS merchantName,tu.`PHOTO` AS merchantPhoto FROM `T_REQUIREADVISORY` tb
+        LEFT JOIN `T_BHW_USER` tbu ON tbu.`ID` = tb.`USERID`
+        LEFT JOIN `T_BHW_USER` tu ON tu.`ID` = tb.`MERCHANTID`
+        where  1=1
+        <if test="null != requireAdvisory.userId">
+            and tb.`USERID`= #{requireAdvisory.userId}
+        </if>
+        <if test="null != requireAdvisory.merchantId">
+            and tb.`MERCHANTID`= #{requireAdvisory.merchantId}
+        </if>
+        ORDER BY tb.`CREATETIME` ASC
+    </select>
+</mapper>

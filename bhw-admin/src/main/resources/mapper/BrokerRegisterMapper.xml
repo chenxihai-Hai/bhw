@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bhw.admin.mapper.BrokerRegisterMapper">
+
+     <select id="qryBrokerList" resultType="com.bhw.admin.pojo.BrokerRegister">
+          SELECT t.*,tbt.`BROKERNAME`,(SELECT COUNT(id) FROM T_EVALUATE_BORKER teb WHERE teb.`BORKERID`=t.`ID`) AS gradeCounts,
+         (SELECT SUM(`GRADE`) FROM T_EVALUATE_BORKER teb WHERE teb.`BORKERID`=t.`ID`) AS grade FROM `T_BORKER` t
+            LEFT JOIN `T_BROKER_TYPE` tbt ON tbt.`BROKERID` = t.`BROKERID`
+            WHERE 1=1
+            <if test="null != broker.borkerId">
+                AND t.`BROKERID`=#{broker.borkerId}
+            </if>
+            <if test="null != broker.status">
+                 AND t.`STATUS`=#{broker.status}
+            </if>
+            ORDER BY t.`CREATETIME` DESC
+     </select>
+
+    <select id="backQryBrokerList" resultType="com.bhw.admin.pojo.BrokerRegister">
+        SELECT t.*,tbt.`BROKERNAME`,tbu.`USERNAME`,tbu.`STATUS` AS userStatus,tbu.`TYPE` AS userType FROM `T_BORKER` t
+        LEFT JOIN `T_BROKER_TYPE` tbt ON tbt.`BROKERID` = t.`BROKERID`
+        LEFT JOIN T_BHW_USER tbu ON tbu.`ID` = t.`USERID`
+        WHERE 1=1
+        <if test="null != broker.borkerId">
+            AND t.`BROKERID`=#{broker.borkerId}
+        </if>
+        <if test="null != broker.phone">
+            AND t.`PHONE`=#{broker.phone}
+        </if>
+        <if test="null != broker.userName">
+            AND t.`NAME`=#{broker.userName}
+        </if>
+        <if test="null != broker.status">
+            AND t.`STATUS`=#{broker.status}
+        </if>
+        <if test="null != broker.userType">
+            AND (tbu.`TYPE`=#{broker.userType} OR tbu.`TYPE` IS NULL)
+        </if>
+        <if test="null != broker.name">
+            AND t.`NAME` like concat('%',#{broker.name},'%')
+        </if>
+        <if test="null != broker.userId">
+            AND t.`USERID` =#{broker.userId}
+        </if>
+        <if test="null != broker.pushTime">
+            AND t.`CREATETIME` <![CDATA[ >= ]]> #{broker.pushTime}
+        </if>
+        ORDER BY t.`CREATETIME` DESC
+    </select>
+
+</mapper>
